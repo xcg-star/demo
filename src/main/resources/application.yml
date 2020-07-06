@@ -1,0 +1,33 @@
+# 本地测试ip
+localhostip: localhost
+
+# MYSQ 相关配置
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${localhostip}:3306/major_db?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: rootbbyy
+  # redis
+  redis:
+    database: 0
+    host: ${localhostip}
+    port: 6379
+    password:
+    timeout: 1000
+
+  application:
+    name: boot-demo
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web.servlet.mvc: WARN
+    org.springframework.boot.actuate: WARN
+  pattern:
+    file: "%d [%t] %-5p %c - %m%n"
+    console: "%d [%t] %-5p %c - %m%n"
+  file:
+    max-history: 7
+    max-size: 1GB
+    path: /tmp/log/${spring.application.name}/output.log

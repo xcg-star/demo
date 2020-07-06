@@ -1,0 +1,56 @@
+package ${package.Entity};
+
+#foreach($pkg in ${table.importPackages})
+import ${pkg};
+#end
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import lombok.Data;
+
+import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_ID;
+import static com.baomidou.mybatisplus.annotation.IdType.AUTO;
+
+/**
+ * $!{table.comment}表
+ *
+ * @author ${author}
+ * @date ${date}
+ */
+@Data
+public class ${entity} implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+## ----------  BEGIN 主键循环遍历  ----------
+#foreach($field in ${table.commonFields})
+    /**
+     * ${field.comment}
+     */
+    #if(${field.comment}=="编号 - 自增")
+    @TableId(type = AUTO)
+    #else
+    @TableId(type = ASSIGN_ID)
+    #end
+    private ${field.propertyType} ${field.propertyName};
+
+#end
+## ----------  END 主键循环遍历  ----------
+## ----------  BEGIN 字段循环遍历  ----------
+#foreach($field in ${table.fields})
+    /**
+     * ${field.comment}
+     */
+    #if(${field.name}=="created_at")
+    @TableField(fill = FieldFill.INSERT)
+    #elseif(${field.name}=="updated_at")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    #end
+    #if(${field.name}=="is_deleted")
+    @TableLogic
+    #end
+    private #if(${field.type}=="timestamp")java.util.Date#else${field.propertyType}#end ${field.propertyName};
+
+#end
+## ----------  END 字段循环遍历  ----------
+}
