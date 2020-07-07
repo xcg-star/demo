@@ -13,7 +13,7 @@ import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_ID;
 import static com.baomidou.mybatisplus.annotation.IdType.AUTO;
 
 /**
- * $!{table.comment}表
+ * $!{table.comment} 表
  *
  * @author ${author}
  * @date ${date}

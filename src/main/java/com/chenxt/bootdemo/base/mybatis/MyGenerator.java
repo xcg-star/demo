@@ -1,8 +1,6 @@
 package com.chenxt.bootdemo.base.mybatis;
 
-import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
@@ -12,35 +10,22 @@ import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
- * demo
+ * mybatis 代码生成
  *
  * @author chenxt
  * @date 2020/02/18
  */
-// 演示例子，执行 main 方法控制台输入模块表名回车自动生成对应项目目录中
 public class MyGenerator {
 
-    /**
-     * <p>
-     * 读取控制台内容
-     * </p>
-     */
-    public static String scanner(String tip) {
-        Scanner scanner = new Scanner(System.in);
-        StringBuilder help = new StringBuilder();
-        help.append("请输入" + tip + "：");
-        System.out.println(help.toString());
-        if (scanner.hasNext()) {
-            String ipt = scanner.next();
-            if (StringUtils.isNotEmpty(ipt)) {
-                return ipt;
-            }
-        }
-        throw new MybatisPlusException("请输入正确的" + tip + "！");
-    }
+    private final static String AUTHOR = "chenxt";
+    private final static String PARENT = "com.chenxt.bootdemo";
+    private final static String TABLE_NAMES = "user";
+    private final static String url = "jdbc:mysql://localhost:3306/major_db?useUnicode=true&characterEncoding=UTF-8";
+    private final static String username = "root";
+    private final static String password = "rootbbyy";
+    private final static String driverClassName = "com.mysql.cj.jdbc.Driver";
 
     public static void main(String[] args) {
         // 代码生成器
@@ -50,24 +35,24 @@ public class MyGenerator {
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
         gc.setOutputDir(projectPath + "/src/main/java");
-        gc.setAuthor("chenxt");
+        gc.setAuthor(AUTHOR);
         gc.setOpen(false);
-        // gc.setSwagger2(true); 实体属性 Swagger2 注解
+        gc.setSwagger2(true); // 实体属性 Swagger2 注解
         mpg.setGlobalConfig(gc);
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/major_db?useUnicode=true&characterEncoding=UTF-8");
+        dsc.setUrl(url);
         // dsc.setSchemaName("public");
-        dsc.setDriverName("com.mysql.cj.jdbc.Driver");
-        dsc.setUsername("root");
-        dsc.setPassword("123456");
+        dsc.setDriverName(driverClassName);
+        dsc.setUsername(username);
+        dsc.setPassword(password);
         mpg.setDataSource(dsc);
 
         // 包配置
         PackageConfig pc = new PackageConfig();
 //        pc.setModuleName(scanner("模块名"));
-        pc.setParent("com.chenxt.");
+        pc.setParent(PARENT);
         mpg.setPackageInfo(pc);
 
         // 自定义配置
@@ -81,7 +66,7 @@ public class MyGenerator {
         // 如果模板引擎是 freemarker
 //        String templatePath = "/templates/mapper.xml.ftl";
         // 如果模板引擎是 velocity
-         String templatePath = "/templates/mapper.xml.vm";
+        String templatePath = "/templates/mapper.xml.vm";
 
         // 自定义输出配置
         List<FileOutConfig> focList = new ArrayList<>();
@@ -90,7 +75,7 @@ public class MyGenerator {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                return projectPath + "/src/main/resources/mapper/member/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
+                return projectPath + "/src/main/resources/mapper/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
             }
         });
         /*
@@ -111,9 +96,12 @@ public class MyGenerator {
 
         // 配置自定义输出模板
         //指定自定义模板路径，注意不要带上.ftl/.vm, 会根据使用的模板引擎自动识别
-         templateConfig.setEntity("/templates/entity2.java");
-        // templateConfig.setService();
-        // templateConfig.setController();
+        templateConfig.setEntity("/templates/entity2.java");
+        templateConfig.setService("/templates/service2.java");
+        templateConfig.setServiceImpl("/templates/serviceImpl2.java");
+        templateConfig.setController("/templates/controller2.java");
+        templateConfig.setMapper("/templates/mapper2.java");
+        templateConfig.setXml("/templates/mapper2.xml");
 
         templateConfig.setXml(null);
         mpg.setTemplate(templateConfig);
@@ -130,8 +118,7 @@ public class MyGenerator {
         // 写于父类中的公共字段
         strategy.setSuperEntityColumns("id");
 //        strategy.setInclude(scanner("表名，多个英文逗号分割").split(","));
-        strategy.setInclude("admin_user_new".split(","));
-//        strategy.setInclude("user,user_authentication,user_ban_record,user_ban_type,user_god_comment_gemmologist_level,user_recent_contact,user_tag".split(","));
+        strategy.setInclude(TABLE_NAMES.split(","));
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(pc.getModuleName() + "_");
         mpg.setStrategy(strategy);

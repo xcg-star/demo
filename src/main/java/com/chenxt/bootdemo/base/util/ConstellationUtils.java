@@ -18,6 +18,9 @@ public class ConstellationUtils {
      * @return the constellation
      */
     public static String getConstellation(Date date) {
+        if (date == null) {
+            return null;
+        }
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int m = calendar.get(Calendar.MONTH) + 1;

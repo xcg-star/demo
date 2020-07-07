@@ -17,10 +17,14 @@ public class PinyinUtils {
 
     /**
      * 获取拼音
+     *
      * @param value 原内容
      * @return 拼音
      */
     public static String toPinYin(String value) {
+        if (value == null) {
+            return null;
+        }
         HanyuPinyinOutputFormat pyFormat = new HanyuPinyinOutputFormat();
         pyFormat.setCaseType(HanyuPinyinCaseType.LOWERCASE);
         pyFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);

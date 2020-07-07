@@ -19,6 +19,22 @@ spring:
   application:
     name: boot-demo
 
+mybatis-plus:
+  configuration:
+    cache-enabled: true
+    use-generated-keys: true
+    default-executor-type: reuse
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  type-aliases-package: com.chenxt.bootdemo.**.entity
+  mapper-locations: classpath:mapper/**/*Mapper.xml
+  global-config:
+    db-config:
+      logic-delete-field: isDeleted  #全局逻辑删除字段值 3.3.0开始支持，详情看下面。
+      logic-delete-value: true # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: false # 逻辑未删除值(默认为 0)
+  type-handlers-package: com.chenxt.bootdemo.base.handler
+
 logging:
   level:
     root: INFO
@@ -31,3 +47,6 @@ logging:
     max-history: 7
     max-size: 1GB
     path: /tmp/log/${spring.application.name}/output.log
+
+server:
+  port: 9080
