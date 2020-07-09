@@ -2,6 +2,8 @@ package com.chenxt.bootdemo.base.expection;
 
 
 import com.chenxt.bootdemo.base.enumeration.CodeStatusEnum;
+import com.chenxt.bootdemo.base.expection.core.IResponseEnum;
+import lombok.Getter;
 
 /**
  * The type Base exception.
@@ -9,11 +11,22 @@ import com.chenxt.bootdemo.base.enumeration.CodeStatusEnum;
  * @author chenxt
  * @date 2020/03/25
  */
+@Getter
 public class BaseException extends RuntimeException {
     /**
      * 错误码
      */
     private Integer code;
+
+    /**
+     * 返回码
+     */
+    protected IResponseEnum responseEnum;
+
+    /**
+     * 异常消息参数
+     */
+    protected Object[] args;
 
     /**
      * Instantiates a new Base exception.
@@ -24,6 +37,17 @@ public class BaseException extends RuntimeException {
     public BaseException(Integer code, String message) {
         super(message);
         this.code = code;
+        this.responseEnum = new IResponseEnum() {
+            @Override
+            public int getCode() {
+                return code;
+            }
+
+            @Override
+            public String getMessage() {
+                return message;
+            }
+        };
     }
 
     /**
@@ -48,20 +72,39 @@ public class BaseException extends RuntimeException {
     }
 
     /**
-     * Gets code.
+     * Instantiates a new Base exception.
      *
-     * @return the code
+     * @param responseEnum the response enum
      */
-    public Integer getCode() {
-        return code;
+    public BaseException(IResponseEnum responseEnum) {
+        super(responseEnum.getMessage());
+        this.responseEnum = responseEnum;
     }
 
     /**
-     * Sets code.
+     * Instantiates a new Base exception.
      *
-     * @param code the code
+     * @param responseEnum the response enum
+     * @param args         the args
+     * @param message      the message
      */
-    public void setCode(Integer code) {
-        this.code = code;
+    public BaseException(IResponseEnum responseEnum, Object[] args, String message) {
+        super(message);
+        this.responseEnum = responseEnum;
+        this.args = args;
+    }
+
+    /**
+     * Instantiates a new Base exception.
+     *
+     * @param responseEnum the response enum
+     * @param args         the args
+     * @param message      the message
+     * @param cause        the cause
+     */
+    public BaseException(IResponseEnum responseEnum, Object[] args, String message, Throwable cause) {
+        super(message, cause);
+        this.responseEnum = responseEnum;
+        this.args = args;
     }
 }

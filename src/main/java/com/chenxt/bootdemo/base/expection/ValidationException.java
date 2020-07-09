@@ -3,43 +3,43 @@ package com.chenxt.bootdemo.base.expection;
 import com.chenxt.bootdemo.base.expection.core.IResponseEnum;
 
 /**
- * <p> 业务异常 </p>
- * <p> 业务处理时，出现异常，可以抛出该异常 </p>
+ * <p> 校验异常 </p>
+ * <p> 调用接口时，参数格式不合法可以抛出该异常 </p>
  *
  * @author chenxt
- * @date 2020/04/06
+ * @date 2020/07/09
  */
-public class BusinessException extends BaseException {
+public class ValidationException extends BaseException {
     /**
-     * Instantiates a new Business exception.
+     * Instantiates a new Validation exception.
      *
      * @param code    the code
      * @param message the message
      */
-    public BusinessException(Integer code, String message) {
+    public ValidationException(Integer code, String message) {
         super(code, message);
     }
 
     /**
-     * Instantiates a new Business exception.
+     * Instantiates a new Validation exception.
      *
      * @param responseEnum the response enum
      * @param args         the args
      * @param message      the message
      */
-    public BusinessException(IResponseEnum responseEnum, Object[] args, String message) {
+    public ValidationException(IResponseEnum responseEnum, Object[] args, String message) {
         super(responseEnum, args, message);
     }
 
     /**
-     * Instantiates a new Business exception.
+     * Instantiates a new Validation exception.
      *
      * @param responseEnum the response enum
      * @param args         the args
      * @param message      the message
      * @param cause        the cause
      */
-    public BusinessException(IResponseEnum responseEnum, Object[] args, String message, Throwable cause) {
+    public ValidationException(IResponseEnum responseEnum, Object[] args, String message, Throwable cause) {
         super(responseEnum, args, message, cause);
     }
 }
