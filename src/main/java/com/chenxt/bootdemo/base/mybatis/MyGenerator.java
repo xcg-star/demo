@@ -21,7 +21,7 @@ public class MyGenerator {
 
     private final static String AUTHOR = "chenxt";
     private final static String PARENT = "com.chenxt.bootdemo";
-    private final static String TABLE_NAMES = "user";
+    private final static String TABLE_NAMES = "follow";
     private final static String url = "jdbc:mysql://localhost:3306/major_db?useUnicode=true&characterEncoding=UTF-8";
     private final static String username = "root";
     private final static String password = "rootbbyy";
