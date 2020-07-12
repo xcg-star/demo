@@ -5,7 +5,7 @@ localhostip: localhost
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${localhostip}:3306/major_db?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://${localhostip}:3306/major_db?useUnicode=true&characterEncoding=UTF-8&createDatabaseIfNotExist=true&serverTimezone=GMT%2b8
     username: root
     password: rootbbyy
   # redis

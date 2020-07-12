@@ -1,6 +1,6 @@
 -- liquibase formatted sql
 
--- changeset nvoxland:1
+-- changeset chenxt:1
 CREATE TABLE IF NOT EXISTS `user`
 (
     `id`               bigint(20)  NOT NULL COMMENT '编号 - 雪花',
@@ -31,5 +31,20 @@ CREATE TABLE IF NOT EXISTS `user`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='用户';
 
--- changeset chenxt:2
+CREATE TABLE IF NOT EXISTS `follow`
+(
+    `id`           bigint(20)   NOT NULL COMMENT '编号 - 雪花',
+    `from_user_id` bigint(20)   NOT NULL COMMENT '关注用户编号',
+    `to_user_id`   bigint(20)   NULL     DEFAULT NULL COMMENT '被关注用户编号',
+    `is_deleted`   tinyint(1)   NOT NULL DEFAULT 0 COMMENT '是否已删除。0：未删除；1：已删除；',
+    `created_at`   timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+    `updated_at`   timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '更新时间',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE INDEX `idx_follow_from_user_id_to_user_id` (`from_user_id`, `to_user_id`) USING BTREE,
+    UNIQUE INDEX `idx_follow_to_user_id` (`to_user_id`) USING BTREE
+) ENGINE = InnoDB
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT = '关注'
+  ROW_FORMAT = Dynamic;
+
 insert ignore into user (id,birthday) value(1,CURRENT_TIMESTAMP);
