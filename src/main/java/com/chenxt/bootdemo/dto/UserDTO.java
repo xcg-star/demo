@@ -22,7 +22,7 @@ import java.util.Date;
 @NoArgsConstructor
 @ApiModel(value = "用户DTO")
 public class UserDTO implements Serializable {
-    private static final long serialVersionUID = 72252063574455185L;
+    private static final long serialVersionUID = 2329946046656198993L;
 
     @ApiModelProperty(value = "手机号码")
     private String phone;
