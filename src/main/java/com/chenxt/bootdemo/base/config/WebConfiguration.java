@@ -1,13 +1,19 @@
 package com.chenxt.bootdemo.base.config;
 
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.support.config.FastJsonConfig;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.chenxt.bootdemo.base.security.TokenParamResolver;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,8 +31,37 @@ public class WebConfiguration implements WebMvcConfigurer {
      */
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        // 0-1可配，2-8是默认加载的
-        converters.add(0, new MappingJackson2HttpMessageConverter());
+        converters.removeIf(converter -> converter instanceof MappingJackson2HttpMessageConverter);
+
+        FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
+        FastJsonConfig fastJsonConfig = new FastJsonConfig();
+        /*
+        分别设置：将Collection类型字段的字段空值输出为[]
+                将字符串类型字段的空值输出为空字符串 ""
+                将数值类型字段的空值输出为0
+                将Boolean类型字段的空值输出为false
+                当有枚举类型的时候输出该枚举的toString方法
+                格式化Json数据
+         */
+        SerializerFeature[] serializerFeatureArray = new SerializerFeature[]{
+                SerializerFeature.WriteNullListAsEmpty,
+                SerializerFeature.WriteNullStringAsEmpty,
+                SerializerFeature.WriteNullNumberAsZero,
+                SerializerFeature.WriteNullBooleanAsFalse,
+                SerializerFeature.WriteEnumUsingToString,
+                SerializerFeature.WriteMapNullValue,
+                SerializerFeature.PrettyFormat
+        };
+        fastJsonConfig.setSerializerFeatures(serializerFeatureArray);
+
+        // 处理中文乱码问题
+        List<MediaType> fastMediaTypes = new ArrayList<>();
+        fastMediaTypes.add(MediaType.APPLICATION_JSON);
+        fastConverter.setSupportedMediaTypes(fastMediaTypes);
+        // 在convert中添加配置信息
+        fastConverter.setFastJsonConfig(fastJsonConfig);
+        // 将convert添加到converters当中
+        converters.add(7, fastConverter);
     }
 
     /**
@@ -52,5 +87,13 @@ public class WebConfiguration implements WebMvcConfigurer {
 
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedHeaders("*")
+                .allowedMethods("*")
+                .allowedOrigins("*");
     }
 }
