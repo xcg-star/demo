@@ -12,7 +12,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum CodeStatusEnum implements BusinessExceptionAssert {
+public enum BusinessExceptionCodeEnum implements BusinessExceptionAssert {
     /**
      * 调用成功
      */
@@ -22,6 +22,16 @@ public enum CodeStatusEnum implements BusinessExceptionAssert {
      * 调用失败
      */
     FAIL(-1, "调用失败"),
+
+    /**
+     * jwt无效！
+     */
+    JWT_INVALID(-11, "jwt无效！"),
+
+    /**
+     * request请求为空！
+     */
+    REQUEST_IS_EMPTY(-12, "request请求为空！"),
 
     /**
      * 语言错误

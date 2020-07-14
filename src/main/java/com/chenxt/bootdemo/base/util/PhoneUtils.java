@@ -2,7 +2,7 @@ package com.chenxt.bootdemo.base.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.chenxt.bootdemo.base.enumeration.CodeStatusEnum;
+import com.chenxt.bootdemo.base.enumeration.BusinessExceptionCodeEnum;
 import com.chenxt.bootdemo.base.expection.BusinessException;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
@@ -117,7 +117,7 @@ public class PhoneUtils {
             languageEnum = LanguageEnum.getByCode(language);
         } catch (Exception e) {
             log.error("语言不存在:", e);
-            throw new BusinessException(CodeStatusEnum.LANGUAGE_NOT_EXIST.getCode(), CodeStatusEnum.LANGUAGE_NOT_EXIST.getMessage());
+            throw new BusinessException(BusinessExceptionCodeEnum.LANGUAGE_NOT_EXIST.getCode(), BusinessExceptionCodeEnum.LANGUAGE_NOT_EXIST.getMessage());
         }
         List<String> countryList = getISOCountryListOrder();
         JSONArray allRegionList = initAllRegionList(languageEnum);

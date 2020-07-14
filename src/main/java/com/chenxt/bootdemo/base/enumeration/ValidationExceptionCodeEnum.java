@@ -12,7 +12,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum ValidationErrorCodeEnum implements ValidationExceptionAssert {
+public enum ValidationExceptionCodeEnum implements ValidationExceptionAssert {
     /**
      * 绑定参数校验异常
      */

@@ -1,7 +1,7 @@
 package com.chenxt.bootdemo.base.expection.handler;
 
-import com.chenxt.bootdemo.base.enumeration.CodeStatusEnum;
-import com.chenxt.bootdemo.base.enumeration.ValidationErrorCodeEnum;
+import com.chenxt.bootdemo.base.enumeration.BusinessExceptionCodeEnum;
+import com.chenxt.bootdemo.base.enumeration.ValidationExceptionCodeEnum;
 import com.chenxt.bootdemo.base.expection.BaseException;
 import com.chenxt.bootdemo.base.expection.BusinessException;
 import com.chenxt.bootdemo.base.expection.ValidationException;
@@ -53,7 +53,7 @@ public class UnifiedServiceExceptionHandler {
     public void handleArgumentException(ValidationException e, HttpServletResponse response) {
         try {
             log.error(e.getMessage(), e);
-            String message = String.format(MESSAGE_FORMAT, "VALIDATION", ValidationErrorCodeEnum.VALID_ERROR.getCode(), getMessage(e), "");
+            String message = String.format(MESSAGE_FORMAT, "VALIDATION", ValidationExceptionCodeEnum.VALID_ERROR.getCode(), getMessage(e), "");
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -131,7 +131,7 @@ public class UnifiedServiceExceptionHandler {
     public void handleException(Exception e, HttpServletResponse response) {
         log.error(e.getMessage(), e);
 
-        String message = String.format(MESSAGE_FORMAT, "UNKNOWN", CodeStatusEnum.FAIL.getCode(), e.getMessage(), "");
+        String message = String.format(MESSAGE_FORMAT, "UNKNOWN", BusinessExceptionCodeEnum.FAIL.getCode(), e.getMessage(), "");
         try {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
         } catch (IOException ex) {
@@ -151,7 +151,7 @@ public class UnifiedServiceExceptionHandler {
             msg.append(", ");
             msg.append(error.getDefaultMessage());
         }
-        String message = String.format(MESSAGE_FORMAT, "VALIDATION", ValidationErrorCodeEnum.VALID_ERROR.getCode(), msg.substring(2), "");
+        String message = String.format(MESSAGE_FORMAT, "VALIDATION", ValidationExceptionCodeEnum.VALID_ERROR.getCode(), msg.substring(2), "");
         try {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message);
         } catch (IOException ex) {

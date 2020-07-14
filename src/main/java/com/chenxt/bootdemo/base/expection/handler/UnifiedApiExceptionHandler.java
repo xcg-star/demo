@@ -1,7 +1,7 @@
 package com.chenxt.bootdemo.base.expection.handler;
 
-import com.chenxt.bootdemo.base.enumeration.CodeStatusEnum;
-import com.chenxt.bootdemo.base.enumeration.ValidationErrorCodeEnum;
+import com.chenxt.bootdemo.base.enumeration.BusinessExceptionCodeEnum;
+import com.chenxt.bootdemo.base.enumeration.ValidationExceptionCodeEnum;
 import com.chenxt.bootdemo.base.expection.BaseException;
 import com.chenxt.bootdemo.base.expection.BusinessException;
 import com.chenxt.bootdemo.base.expection.ValidationException;
@@ -114,7 +114,7 @@ public class UnifiedApiExceptionHandler {
     @ResponseBody
     public ResponseVO handleException(Exception e) {
         log.error(e.getMessage(), e);
-        return new ResponseVO(CodeStatusEnum.FAIL.getCode(), e.getMessage(), null);
+        return new ResponseVO(BusinessExceptionCodeEnum.FAIL.getCode(), e.getMessage(), null);
     }
 
     /**
@@ -130,7 +130,7 @@ public class UnifiedApiExceptionHandler {
             msg.append(", ");
             msg.append(error.getDefaultMessage());
         }
-        return new ResponseVO(ValidationErrorCodeEnum.VALID_ERROR.getCode(), msg.substring(2), null);
+        return new ResponseVO(ValidationExceptionCodeEnum.VALID_ERROR.getCode(), msg.substring(2), null);
     }
 
     /**

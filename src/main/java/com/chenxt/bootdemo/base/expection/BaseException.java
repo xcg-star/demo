@@ -1,7 +1,7 @@
 package com.chenxt.bootdemo.base.expection;
 
 
-import com.chenxt.bootdemo.base.enumeration.CodeStatusEnum;
+import com.chenxt.bootdemo.base.enumeration.BusinessExceptionCodeEnum;
 import com.chenxt.bootdemo.base.expection.core.IResponseEnum;
 import lombok.Getter;
 
@@ -66,7 +66,7 @@ public class BaseException extends RuntimeException {
      *
      * @param status the status
      */
-    public BaseException(CodeStatusEnum status) {
+    public BaseException(BusinessExceptionCodeEnum status) {
         super(status.getMessage());
         this.code = code;
     }
