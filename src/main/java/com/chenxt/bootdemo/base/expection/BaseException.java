@@ -1,7 +1,7 @@
 package com.chenxt.bootdemo.base.expection;
 
 
-import com.chenxt.bootdemo.base.enumeration.BusinessExceptionCodeEnum;
+import com.chenxt.bootdemo.base.expection.enumeration.BusinessExceptionCodeEnum;
 import com.chenxt.bootdemo.base.expection.core.IResponseEnum;
 import lombok.Getter;
 
@@ -48,17 +48,6 @@ public class BaseException extends RuntimeException {
                 return message;
             }
         };
-    }
-
-    /**
-     * Instantiates a new Base exception.
-     *
-     * @param message the message
-     * @param code    the code
-     */
-    public BaseException(String message, Integer code) {
-        super(message);
-        this.code = code;
     }
 
     /**

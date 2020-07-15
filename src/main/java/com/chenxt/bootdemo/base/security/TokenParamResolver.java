@@ -1,6 +1,6 @@
 package com.chenxt.bootdemo.base.security;
 
-import com.chenxt.bootdemo.base.enumeration.BusinessExceptionCodeEnum;
+import com.chenxt.bootdemo.base.expection.enumeration.BusinessExceptionCodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.util.StringUtils;

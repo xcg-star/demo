@@ -1,5 +1,6 @@
 package com.chenxt.bootdemo.base.config;
 
+import com.chenxt.bootdemo.base.api.RedisReentrantLock;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,5 +41,10 @@ public class RedisConfig {
         template.setHashValueSerializer(jackson2JsonRedisSerializer);
         template.afterPropertiesSet();
         return template;
+    }
+
+    @Bean
+    public RedisReentrantLock redisLockRegistry(RedisConnectionFactory redisConnectionFactory) {
+        return new RedisReentrantLock(redisConnectionFactory, "bootdemo:locks");
     }
 }

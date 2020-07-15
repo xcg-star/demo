@@ -2,4 +2,39 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chenxt.bootdemo.mapper.UserMapper">
 
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.chenxt.bootdemo.entity.User">
+        <result column="id" property="id" />
+        <result column="phone" property="phone" />
+        <result column="email" property="email" />
+        <result column="password" property="password" />
+        <result column="nick_name" property="nickName" />
+        <result column="nick_name_pinyin" property="nickNamePinyin" />
+        <result column="avatar" property="avatar" />
+        <result column="sex" property="sex" />
+        <result column="bio" property="bio" />
+        <result column="birthday" property="birthday" />
+        <result column="constellation" property="constellation" />
+        <result column="province" property="province" />
+        <result column="city" property="city" />
+        <result column="district" property="district" />
+        <result column="addr" property="addr" />
+        <result column="real_name" property="realName" />
+        <result column="is_enable" property="isEnable" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+    </resultMap>
+
+    <select id="selectByPhone" resultType="com.chenxt.bootdemo.entity.User">
+        select id,phone,email,password,nick_name,nick_name_pinyin,avatar,sex,bio,birthday,constellation,province,city,district,addr,real_name,is_enable,is_deleted,created_at,updated_at
+        from user where phone = #{phone} and is_deleted is false
+    </select>
+    <select id="selectByEmail" resultType="com.chenxt.bootdemo.entity.User">
+        select id,phone,email,password,nick_name,nick_name_pinyin,avatar,sex,bio,birthday,constellation,province,city,district,addr,real_name,is_enable,is_deleted,created_at,updated_at
+        from user where email = #{email} and is_deleted is false
+    </select>
+    <select id="countByNickName" resultType="java.lang.Integer">
+        select count(*) from user where nick_name = #{nickName}
+    </select>
 </mapper>

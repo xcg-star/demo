@@ -6,7 +6,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.chenxt.bootdemo.base.constrants.TimeConstants;
-import com.chenxt.bootdemo.base.enumeration.BusinessExceptionCodeEnum;
+import com.chenxt.bootdemo.base.expection.enumeration.BusinessExceptionCodeEnum;
 import com.chenxt.bootdemo.base.expection.BusinessException;
 import org.apache.commons.lang3.time.DateUtils;
 
@@ -78,7 +78,7 @@ public class JwtUtil {
                     .build();
         } catch (Exception e) {
             //ExpiredJwtException
-            throw new BusinessException(BusinessExceptionCodeEnum.JWT_INVALID.getCode(), BusinessExceptionCodeEnum.JWT_INVALID.getMessage());
+            throw new BusinessException(BusinessExceptionCodeEnum.JWT_INVALID);
         }
     }
 }

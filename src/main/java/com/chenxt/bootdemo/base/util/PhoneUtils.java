@@ -2,8 +2,8 @@ package com.chenxt.bootdemo.base.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.chenxt.bootdemo.base.enumeration.BusinessExceptionCodeEnum;
 import com.chenxt.bootdemo.base.expection.BusinessException;
+import com.chenxt.bootdemo.base.expection.enumeration.BusinessExceptionCodeEnum;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PhoneUtils {
     private static final Pattern REGION_PATTERN = Pattern.compile("(?<=\\+)\\d*(?=\\s)");
+    private static final Pattern INTERNAL_PATTERN = Pattern.compile("^(1[3456789]\\d{9})$");
 
     private static final Map<String, Integer> extendRegionMap = getExtendRegionMap();
     /**
@@ -56,6 +57,16 @@ public class PhoneUtils {
         extendRegionMap.put("AQ", 672);
         extendRegionMap.put("HM", 672);
         return extendRegionMap;
+    }
+
+    /**
+     * 国内手机号码是否合法
+     *
+     * @param fullPhone 11位电话号码
+     * @return 是否合法
+     */
+    public static boolean isPhoneValidForInternal(String fullPhone) {
+        return INTERNAL_PATTERN.matcher(fullPhone).matches();
     }
 
     /**
@@ -117,7 +128,7 @@ public class PhoneUtils {
             languageEnum = LanguageEnum.getByCode(language);
         } catch (Exception e) {
             log.error("语言不存在:", e);
-            throw new BusinessException(BusinessExceptionCodeEnum.LANGUAGE_NOT_EXIST.getCode(), BusinessExceptionCodeEnum.LANGUAGE_NOT_EXIST.getMessage());
+            throw new BusinessException(BusinessExceptionCodeEnum.LANGUAGE_NOT_EXIST);
         }
         List<String> countryList = getISOCountryListOrder();
         JSONArray allRegionList = initAllRegionList(languageEnum);

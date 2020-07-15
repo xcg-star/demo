@@ -50,3 +50,6 @@ logging:
 
 server:
   port: 9080
+
+verifycode:
+  mode: 1 #1:允许使用111111，2:不允许使用111111，3:发送短信

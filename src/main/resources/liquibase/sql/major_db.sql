@@ -48,3 +48,13 @@ CREATE TABLE IF NOT EXISTS `follow`
   ROW_FORMAT = Dynamic;
 
 insert ignore into user (id,birthday) value(1,CURRENT_TIMESTAMP);
+
+-- changeset chenxt:2
+CREATE TABLE IF NOT EXISTS `user_nick_name_index`
+(
+    `nick_name_index` int(11)     NOT NULL COMMENT '用户昵称index'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  ROW_FORMAT = DYNAMIC COMMENT ='用户昵称索引';
+
+insert into user_nick_name_index value(0);

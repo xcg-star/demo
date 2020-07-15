@@ -1,7 +1,7 @@
 package com.chenxt.bootdemo.base.expection.handler;
 
-import com.chenxt.bootdemo.base.enumeration.BusinessExceptionCodeEnum;
-import com.chenxt.bootdemo.base.enumeration.ValidationExceptionCodeEnum;
+import com.chenxt.bootdemo.base.expection.enumeration.BusinessExceptionCodeEnum;
+import com.chenxt.bootdemo.base.expection.enumeration.ValidationExceptionCodeEnum;
 import com.chenxt.bootdemo.base.expection.BaseException;
 import com.chenxt.bootdemo.base.expection.BusinessException;
 import com.chenxt.bootdemo.base.expection.ValidationException;

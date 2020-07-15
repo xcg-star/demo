@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenxt.bootdemo.mapper.UserNickNameIndexMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.chenxt.bootdemo.entity.UserNickNameIndex">
+        <result column="nick_name_index" property="nickNameIndex" />
+    </resultMap>
+    <update id="updateIndex">
+        update user_nick_name_index set nick_name_index = #{nickNameIndex}
+    </update>
+
+</mapper>

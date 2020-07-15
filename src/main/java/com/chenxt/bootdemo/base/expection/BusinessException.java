@@ -13,11 +13,10 @@ public class BusinessException extends BaseException {
     /**
      * Instantiates a new Business exception.
      *
-     * @param code    the code
-     * @param message the message
+     * @param responseEnum the response enum
      */
-    public BusinessException(Integer code, String message) {
-        super(code, message);
+    public BusinessException(IResponseEnum responseEnum) {
+        super(responseEnum);
     }
 
     /**

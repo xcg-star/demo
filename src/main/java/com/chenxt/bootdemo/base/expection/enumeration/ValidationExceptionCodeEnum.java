@@ -1,4 +1,4 @@
-package com.chenxt.bootdemo.base.enumeration;
+package com.chenxt.bootdemo.base.expection.enumeration;
 
 import com.chenxt.bootdemo.base.expection.assertion.ValidationExceptionAssert;
 import lombok.AllArgsConstructor;
