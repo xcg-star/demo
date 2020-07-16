@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_ID;
@@ -70,7 +71,7 @@ public class User implements Serializable {
     /**
      * 生日
      */
-    private Date birthday;
+    private LocalDate birthday;
 
     /**
      * 星座

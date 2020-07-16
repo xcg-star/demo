@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PhoneUtils {
     private static final Pattern REGION_PATTERN = Pattern.compile("(?<=\\+)\\d*(?=\\s)");
-    private static final Pattern INTERNAL_PATTERN = Pattern.compile("^(1[3456789]\\d{9})$");
+    private static final Pattern INTERNAL_PATTERN = Pattern.compile("^[1][3-9][0-9]{9}$");
 
     private static final Map<String, Integer> extendRegionMap = getExtendRegionMap();
     /**

@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.concurrent.locks.Lock;
 
 /**
@@ -154,7 +154,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setPhone(phone);
         user.setEmail(email);
         user.setIsEnable(true);
-        user.setBirthday(new Date());
+        user.setBirthday(LocalDate.now());
         baseMapper.insert(user);
         return user;
     }

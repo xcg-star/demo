@@ -2,7 +2,10 @@ package com.chenxt.bootdemo.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
@@ -16,6 +19,9 @@ import java.io.Serializable;
  * @date 2020/07/15
  */
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @ApiModel(value = "用户登陆DTO")
 public class UserLoginDTO implements Serializable {
     private static final long serialVersionUID = 6283010498268643414L;

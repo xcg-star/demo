@@ -1,28 +1,18 @@
 package com.chenxt.bootdemo.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.chenxt.bootdemo.SpringBootDemoApplication;
+import com.chenxt.bootdemo.BaseTest;
+import com.chenxt.bootdemo.mapper.UserMapper;
 import com.chenxt.bootdemo.service.cache.UserCacheService;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
 
-import javax.annotation.Resource;
-
-import static org.hamcrest.Matchers.anything;
-import static org.mockito.Mockito.when;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 
 /**
@@ -31,20 +21,12 @@ import static org.junit.Assert.assertThat;
  * @author chenxt
  * @date 2020/07/15
  */
-@AutoConfigureMockMvc
-@Transactional
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = SpringBootDemoApplication.class)
-public class UserControllerTest {
-
-    @Resource
-    private WebApplicationContext mac;
-
-    @Resource
-    private MockMvc mockMvc;
+public class UserControllerTest extends BaseTest {
 
     @MockBean
     private UserCacheService userCacheService;
+    @MockBean
+    private UserMapper userMapper;
 
     @Test
     public void loginTest() throws Exception {
@@ -54,6 +36,12 @@ public class UserControllerTest {
         jsonObject.put("verifyCode", "111111");
 
         when(userCacheService.getNickNameIndex()).thenReturn(99999999);
+        when(userCacheService.getVerifyCode(any(), any())).thenReturn("111111");
+        when(userCacheService.getVerifyCodeTicket(any(), any())).thenReturn("111111");
+        doNothing().when(userCacheService).setVerifyCodeTicket(any(), any(), any());
+        doNothing().when(userCacheService).deleteVerifyCode(any(), any());
+        doNothing().when(userCacheService).deleteVerifyCodeTicket(any(), any());
+        doNothing().when(userCacheService).updateNickNameIndex(any());
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/user/login")
                 //json类型
@@ -72,5 +60,9 @@ public class UserControllerTest {
                 //添加ResultHandler结果处理器，比如调试时 打印结果(print方法)到控制台
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
+        verify(userMapper, times(0)).selectByEmail(any());
+        verify(userMapper, times(1)).selectByPhone(any());
+        verify(userMapper, times(0)).countByNickName(any());
+        verify(userMapper, times(0)).insert(any());
     }
 }
