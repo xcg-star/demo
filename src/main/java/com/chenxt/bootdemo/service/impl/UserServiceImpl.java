@@ -161,7 +161,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     private String getNickName() {
         String nickName = tryGetNickName();
-        if (baseMapper.countByNickName(nickName) > 1) {
+        if (baseMapper.countByNickName(nickName) > 0) {
             return getNickName();
         }
         return nickName;

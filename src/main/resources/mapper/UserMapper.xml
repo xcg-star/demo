@@ -35,6 +35,6 @@
         from user where email = #{email} and is_deleted is false
     </select>
     <select id="countByNickName" resultType="java.lang.Integer">
-        select count(*) from user where nick_name = #{nickName}
+        select count(*) from user where nick_name = #{nickName} and is_deleted is false
     </select>
 </mapper>

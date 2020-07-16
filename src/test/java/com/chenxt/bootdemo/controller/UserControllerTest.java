@@ -2,10 +2,12 @@ package com.chenxt.bootdemo.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.chenxt.bootdemo.SpringBootDemoApplication;
+import com.chenxt.bootdemo.service.cache.UserCacheService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,6 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.Resource;
+
+import static org.hamcrest.Matchers.anything;
+import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
 
 /**
  * demo
@@ -35,6 +43,9 @@ public class UserControllerTest {
     @Resource
     private MockMvc mockMvc;
 
+    @MockBean
+    private UserCacheService userCacheService;
+
     @Test
     public void loginTest() throws Exception {
         //请求的json
@@ -42,6 +53,7 @@ public class UserControllerTest {
         jsonObject.put("phone", "18251816111");
         jsonObject.put("verifyCode", "111111");
 
+        when(userCacheService.getNickNameIndex()).thenReturn(99999999);
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/user/login")
                 //json类型
@@ -56,6 +68,7 @@ public class UserControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(""))
                 //body属性不为空
                 .andExpect(MockMvcResultMatchers.jsonPath("$.data").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.nickName").value("用户99999999"))
                 //添加ResultHandler结果处理器，比如调试时 打印结果(print方法)到控制台
                 .andDo(MockMvcResultHandlers.print())
                 .andReturn();
