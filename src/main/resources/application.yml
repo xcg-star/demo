@@ -15,9 +15,18 @@ spring:
     port: 6379
     password:
     timeout: 1000
+  # rabbitmq
+  rabbitmq:
+    host: ${localhostip}
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: my_vhost
 
   application:
     name: boot-demo
+  main:
+    allow-bean-definition-overriding: true
 
 mybatis-plus:
   configuration:

@@ -1,7 +1,10 @@
 package com.chenxt.bootdemo.controller;
 
 
+import com.alibaba.fastjson.JSON;
+import com.chenxt.bootdemo.base.config.RabbitMqConfig;
 import com.chenxt.bootdemo.dto.UserLoginDTO;
+import com.chenxt.bootdemo.mq.rabbit.sender.RabbitMqSender;
 import com.chenxt.bootdemo.service.IUserService;
 import com.chenxt.bootdemo.vo.UserVO;
 import io.swagger.annotations.ApiOperation;
@@ -23,11 +26,15 @@ import javax.annotation.Resource;
 public class UserController {
     @Resource
     private IUserService userService;
+    @Resource
+    private RabbitMqSender rabbitMqSender;
 
     @ApiOperation(value = "登陆", produces = "application/json")
     @PostMapping("/login")
     public UserVO login(@RequestBody UserLoginDTO userLoginDTO) {
-        return userService.login(userLoginDTO);
+        UserVO userVO = userService.login(userLoginDTO);
+        rabbitMqSender.send(RabbitMqConfig.USER_LOGIN_EXCHANGE, "bootdemo.user.login.log", JSON.toJSONString(userVO));
+        return userVO;
     }
 }
 
