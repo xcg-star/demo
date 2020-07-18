@@ -43,6 +43,7 @@ public class FollowController {
                                                               @RequestParam long count,
                                                               @RequestParam Long currentUserId) {
         List<FollowVO> followVOList = followService.getFollowListByTimeline(userId, timeline, count, currentUserId);
+        //TODO 获取用户信息
         return TimelineUtils.renderTimelineVO(timeline, followVOList, FollowVO::getToUserId);
     }
 
@@ -58,6 +59,7 @@ public class FollowController {
                                                             @RequestParam long count,
                                                             @RequestParam Long currentUserId) {
         List<FollowVO> followVOList = followService.getFansListByTimeline(userId, timeline, count, currentUserId);
+        //TODO 获取用户信息
         return TimelineUtils.renderTimelineVO(timeline, followVOList, FollowVO::getFromUserId);
     }
 
@@ -65,6 +67,9 @@ public class FollowController {
     @PostMapping("/follow")
     public FollowResultVO follow(@RequestBody FollowDTO followDTO,
                                  @RequestParam Long currentUserId) {
+        //TODO 若用户不存在抛出异常
+//        UserExistVO userExistVO = userClient.isExist(followDTO.getToUserId());
+//        BusinessExceptionCodeEnum.USER_NOT_EXISTS.assertIsTrue(userExistVO.getIsExist);
         return followService.follow(followDTO, currentUserId);
     }
 

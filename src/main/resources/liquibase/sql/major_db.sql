@@ -58,3 +58,20 @@ CREATE TABLE IF NOT EXISTS `user_nick_name_index`
   ROW_FORMAT = DYNAMIC COMMENT ='用户昵称索引';
 
 insert into user_nick_name_index value(0);
+
+-- changeset chenxt:3
+CREATE TABLE IF NOT EXISTS `blacklist`
+(
+    `id`           bigint(20)   NOT NULL AUTO_INCREMENT COMMENT '编号 - 自增',
+    `from_user_id` bigint(20)   NOT NULL COMMENT '拉黑用户编号',
+    `to_user_id`   bigint(20)   NOT NULL COMMENT '被拉黑用户编号',
+    `is_deleted`   tinyint(1)   NOT NULL DEFAULT 0 COMMENT '是否已删除。0：未删除；1：已删除；',
+    `created_at`   timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
+    `updated_at`   timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '更新时间',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE INDEX `idx_blacklist_from_user_id_to_user_id` (`from_user_id`, `to_user_id`) USING BTREE,
+    UNIQUE INDEX `idx_blacklist_to_user_id` (`to_user_id`) USING BTREE
+) ENGINE = InnoDB
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT = '拉黑'
+  ROW_FORMAT = Dynamic;

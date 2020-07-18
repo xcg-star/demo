@@ -81,7 +81,29 @@ public enum BusinessExceptionCodeEnum implements BusinessExceptionAssert {
     /**
      * 用户不存在
      */
-    USER_NOT_EXISTS(-298, "用户不存在");
+    USER_NOT_EXISTS(-298, "用户不存在"),
+
+    /**
+     * 不允许自己关注自己
+     */
+    FOLLOW_SELF_NOT_ALLOW(-1103, "不允许自己关注自己"),
+
+    /**
+     * 不允许自己拉黑自己
+     */
+    BLACKLIST_SELF_NOT_ALLOW(-1104, "不允许自己拉黑自己"),
+
+    /**
+     * 已被对方拉黑(关注场景)
+     */
+    IS_BLACKLISTED_FOLLOW(-1107, "由于对方设置，你不能关注TA"),
+
+    /**
+     * 已拉黑对方(关注场景)
+     */
+    BLACKLISTED_FOLLOW(-1109, "您已拉黑用户，请先到个人主页解除拉黑"),
+
+    ;
 
     private int code;
     private String message;

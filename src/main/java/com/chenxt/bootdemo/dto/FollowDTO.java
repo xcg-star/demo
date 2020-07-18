@@ -22,6 +22,4 @@ public class FollowDTO implements Serializable {
     @JSONField(serializeUsing = ToStringSerializer.class)
     @ApiModelProperty("被关注用户编号")
     private Long toUserId;
-    @ApiModelProperty("被关注话题编号")
-    private Long topicId;
 }

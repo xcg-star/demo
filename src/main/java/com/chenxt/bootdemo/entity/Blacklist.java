@@ -1,41 +1,39 @@
 package com.chenxt.bootdemo.entity;
 
-import java.time.LocalDateTime;
-import java.io.Serializable;
-import java.time.LocalTime;
-
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 
-import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_ID;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 import static com.baomidou.mybatisplus.annotation.IdType.AUTO;
 
 /**
- * 关注 表
+ * 拉黑 表
  *
  * @author chenxt
- * @date 2020-07-12
+ * @date 2020-07-18
  */
 @Data
-public class Follow implements Serializable {
+public class Blacklist implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /**
-     * 编号 - 雪花
+     * 编号 - 自增
      */
-    @TableId(type = ASSIGN_ID)
+    @TableId(type = AUTO)
     private Long id;
 
     /**
-     * 关注用户编号
+     * 拉黑用户编号
      */
     private Long fromUserId;
 
     /**
-     * 被关注用户编号
+     * 被拉黑用户编号
      */
     private Long toUserId;
 

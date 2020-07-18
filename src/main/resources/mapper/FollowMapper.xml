@@ -2,4 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chenxt.bootdemo.mapper.FollowMapper">
 
+    <insert id="insertOnDuplicateUpdate">
+        insert into follow (id,from_user_id,to_user_id)
+        values (#{id},#{fromUserId},#{toUserId})
+        on duplicate key
+            update updated_at = #{updatedAt},is_deleted = false;
+    </insert>
 </mapper>

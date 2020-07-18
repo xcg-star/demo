@@ -3,7 +3,9 @@ package com.chenxt.bootdemo.base.api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.beans.BeanMap;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -259,5 +262,81 @@ public class RedisApi {
      */
     public static Long sSize(String key) {
         return redisTemplate.opsForSet().size(key);
+    }
+
+    /**- - - - - - - - - - - - - - - - - - -  Sorted Set - - - - - - - - - - - - - - - - - - - -*/
+
+    /**
+     * 获取倒序集合
+     *
+     * @param key
+     * @param start
+     * @param end   若为-1则是查全部
+     * @return
+     */
+    public static Set<Object> zrevrange(String key, long start, long end) {
+        return redisTemplate.opsForZSet().reverseRange(key, start, end);
+    }
+
+    /**
+     * 获取元素在有序集合的索引位置
+     *
+     * @param key
+     * @param valueOf
+     * @return
+     */
+    public static Long zrevrank(String key, Object valueOf) {
+        return redisTemplate.opsForZSet().reverseRank(key, valueOf);
+    }
+
+    /**
+     * 有序集合删除
+     *
+     * @param key
+     * @param valueOf
+     */
+    public static Long zrem(String key, Object valueOf) {
+        return redisTemplate.opsForZSet().remove(key, valueOf);
+    }
+
+    /**
+     * 有序集合计数
+     *
+     * @param key
+     * @return
+     */
+    public static Long zSetSize(String key) {
+        ZSetOperations<String, Object> set = redisTemplate.opsForZSet();
+        return set.size(key);
+    }
+
+    /**
+     * 获取有序集合第一个元素
+     *
+     * @param key
+     * @return
+     */
+    public static Object zSetGetFirst(String key) {
+        ZSetOperations<String, Object> operations = redisTemplate.opsForZSet();
+        Set set = operations.range(key, 0, 0);
+        if (CollectionUtils.isEmpty(set)) {
+            return null;
+        }
+        return set.iterator().next();
+    }
+
+    /**- - - - - - - - - - - - - - - - - - -  事务 - - - - - - - - - - - - - - - - - - - -*/
+
+    public static void execute(Consumer<RedisTemplate<String, Object>> redisTemplateConsumer) {
+        redisTemplateConsumer.accept(redisTemplate);
+    }
+
+    /**
+     * 解除过期时间
+     *
+     * @param redisKey
+     */
+    public static void persist(String redisKey) {
+        redisTemplate.persist(redisKey);
     }
 }
