@@ -6,7 +6,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 /**
- * RabbitMq监听器
+ * RabbitMq 用户监听器
  *
  * @author chenxt
  * @date 2020/07/17
