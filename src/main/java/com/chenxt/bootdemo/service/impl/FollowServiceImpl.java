@@ -170,7 +170,6 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
         followCacheService.addBlacklistUser(fromUserId, toUserId, blacklist.getUpdatedAt());
         //设置新的关系
         blacklistResultVO.setRelation(getFollowRelationEnum(fromUserId, toUserId).getCode());
-        blacklistResultVO.setBlacklistId(blacklist.getId());
         return blacklistResultVO;
     }
 

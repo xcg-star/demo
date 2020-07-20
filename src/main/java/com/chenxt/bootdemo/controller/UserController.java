@@ -3,6 +3,8 @@ package com.chenxt.bootdemo.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.chenxt.bootdemo.base.config.RabbitMqConfig;
+import com.chenxt.bootdemo.base.security.JwtUtil;
+import com.chenxt.bootdemo.base.security.Token;
 import com.chenxt.bootdemo.dto.UserLoginDTO;
 import com.chenxt.bootdemo.mq.rabbit.sender.RabbitMqSender;
 import com.chenxt.bootdemo.service.IUserService;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 用户 前端控制器
@@ -28,11 +31,14 @@ public class UserController {
     private IUserService userService;
     @Resource
     private RabbitMqSender rabbitMqSender;
+    @Resource
+    private HttpServletResponse httpServletResponse;
 
     @ApiOperation(value = "登陆", produces = "application/json")
     @PostMapping("/login")
     public UserVO login(@RequestBody UserLoginDTO userLoginDTO) {
         UserVO userVO = userService.login(userLoginDTO);
+        httpServletResponse.setHeader("jwt-token", JwtUtil.createJwt(Token.builder().currentUserId(userVO.getId()).build()));
         rabbitMqSender.send(RabbitMqConfig.USER_LOGIN_EXCHANGE, "bootdemo.user.login.log", JSON.toJSONString(userVO));
         return userVO;
     }

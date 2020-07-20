@@ -1,6 +1,8 @@
 package com.chenxt.bootdemo.controller;
 
 
+import com.chenxt.bootdemo.base.security.Token;
+import com.chenxt.bootdemo.base.security.TokenParam;
 import com.chenxt.bootdemo.base.util.TimelineUtils;
 import com.chenxt.bootdemo.base.vo.TimelineVO;
 import com.chenxt.bootdemo.dto.BlacklistDTO;
@@ -41,8 +43,8 @@ public class FollowController {
     public TimelineVO<List<FollowVO>> getFollowListByTimeline(@PathVariable Long userId,
                                                               @RequestParam long timeline,
                                                               @RequestParam long count,
-                                                              @RequestParam Long currentUserId) {
-        List<FollowVO> followVOList = followService.getFollowListByTimeline(userId, timeline, count, currentUserId);
+                                                              @TokenParam Token token) {
+        List<FollowVO> followVOList = followService.getFollowListByTimeline(userId, timeline, count, token.getCurrentUserId());
         //TODO 获取用户信息
         return TimelineUtils.renderTimelineVO(timeline, followVOList, FollowVO::getToUserId);
     }
@@ -57,8 +59,8 @@ public class FollowController {
     public TimelineVO<List<FollowVO>> getFansListByTimeline(@PathVariable Long userId,
                                                             @RequestParam long timeline,
                                                             @RequestParam long count,
-                                                            @RequestParam Long currentUserId) {
-        List<FollowVO> followVOList = followService.getFansListByTimeline(userId, timeline, count, currentUserId);
+                                                            @TokenParam Token token) {
+        List<FollowVO> followVOList = followService.getFansListByTimeline(userId, timeline, count, token.getCurrentUserId());
         //TODO 获取用户信息
         return TimelineUtils.renderTimelineVO(timeline, followVOList, FollowVO::getFromUserId);
     }
@@ -66,11 +68,11 @@ public class FollowController {
     @ApiOperation(value = "新增关注", produces = "application/json")
     @PostMapping("/follow")
     public FollowResultVO follow(@RequestBody FollowDTO followDTO,
-                                 @RequestParam Long currentUserId) {
+                                 @TokenParam Token token) {
         //TODO 若用户不存在抛出异常
 //        UserExistVO userExistVO = userClient.isExist(followDTO.getToUserId());
 //        BusinessExceptionCodeEnum.USER_NOT_EXISTS.assertIsTrue(userExistVO.getIsExist);
-        return followService.follow(followDTO, currentUserId);
+        return followService.follow(followDTO, token.getCurrentUserId());
     }
 
     @ApiOperation(value = "取消关注", produces = "application/json")
@@ -80,8 +82,8 @@ public class FollowController {
     })
     @DeleteMapping("/follow")
     public FollowResultVO unfollow(@RequestParam(required = false) Long toUserId,
-                                   @RequestParam Long currentUserId) {
-        return followService.unFollow(toUserId, currentUserId);
+                                   @TokenParam Token token) {
+        return followService.unFollow(toUserId, token.getCurrentUserId());
     }
 
     @ApiOperation(value = "批量获取是否关注", produces = "application/json")
@@ -98,13 +100,13 @@ public class FollowController {
     @ApiOperation(value = "新增拉黑", produces = "application/json")
     @PostMapping("/blacklist")
     public BlacklistResultVO blacklist(@RequestBody BlacklistDTO blacklistDTO,
-                                       @RequestParam Long currentUserId) {
+                                       @TokenParam Token token) {
         //TODO 若用户不存在抛出异常
 //        UserExistVO userExistVO = userClient.isExist(blacklistDTO.getToUserId());
 //        if (!userExistVO.getIsExist()) {
 //            throw new BusinessException(CodeStatusEnum.USER_NOT_EXIST.getCode(), CodeStatusEnum.USER_NOT_EXIST.getMessage());
 //        }
-        return followService.blacklist(blacklistDTO, currentUserId);
+        return followService.blacklist(blacklistDTO, token.getCurrentUserId());
     }
 
     @ApiOperation(value = "取消拉黑", produces = "application/json")
@@ -113,8 +115,8 @@ public class FollowController {
     })
     @DeleteMapping("/blacklist")
     public BlacklistResultVO cancelBlacklist(@RequestParam Long toUserId,
-                                             @RequestParam Long currentUserId) {
-        return followService.unBlacklist(toUserId, currentUserId);
+                                             @TokenParam Token token) {
+        return followService.unBlacklist(toUserId, token.getCurrentUserId());
     }
 }
 

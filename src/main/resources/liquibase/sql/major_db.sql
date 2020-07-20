@@ -75,3 +75,6 @@ CREATE TABLE IF NOT EXISTS `blacklist`
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT = '拉黑'
   ROW_FORMAT = Dynamic;
+
+-- changeset chenxt:4
+alter table `follow` modify column `to_user_id` bigint (20) NOT NULL COMMENT '关注用户编号';

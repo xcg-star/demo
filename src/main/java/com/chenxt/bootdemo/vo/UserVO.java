@@ -1,5 +1,7 @@
 package com.chenxt.bootdemo.vo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.ToStringSerializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -23,6 +25,10 @@ import java.util.Date;
 @ApiModel(value = "用户VO")
 public class UserVO implements Serializable {
     private static final long serialVersionUID = -2218375365533114047L;
+
+    @JSONField(serializeUsing = ToStringSerializer.class)
+    @ApiModelProperty(value = "编号 - 雪花")
+    private Long id;
 
     @ApiModelProperty(value = "手机号码")
     private String phone;

@@ -17,9 +17,6 @@ import java.io.Serializable;
 public class BlacklistResultVO implements Serializable {
     private static final long serialVersionUID = -4446229044971906298L;
 
-    @ApiModelProperty(value = "拉黑编号")
-    private Long blacklistId;
-
     @ApiModelProperty(value = "关系(1：本人，2：未关注，3：已关注，4：互相关注，5：已被拉黑，6：已拉黑)")
     private Integer relation;
 }

@@ -22,6 +22,7 @@ public class FollowStatusVO implements Serializable {
 
     @ApiModelProperty("关系(1：本人，2：未关注，3：已关注，4：互相关注，5：已被拉黑，6：已拉黑)")
     private Integer relation;
+
     @JSONField(serializeUsing = ToStringSerializer.class)
     @ApiModelProperty(value = "关注编号(若isFollow为true则有值)")
     private Long followId;

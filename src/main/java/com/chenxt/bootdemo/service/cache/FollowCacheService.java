@@ -197,10 +197,12 @@ public class FollowCacheService implements ICachedPrefix {
             if (dataList.isEmpty()) {
                 // 添加防穿透数据
                 dataList.add(throughObject);
+                pipeline(redisConnection -> handleConsumer.accept(redisConnection, dataList));
+                // 防穿透数据设置30s过期时间
+                RedisApi.expire(redisKey, 30, TimeUnit.SECONDS);
+            }else {
+                pipeline(redisConnection -> handleConsumer.accept(redisConnection, dataList));
             }
-            pipeline(redisConnection -> handleConsumer.accept(redisConnection, dataList));
-            // 防穿透数据设置30s过期时间
-            RedisApi.expire(redisKey, 30, TimeUnit.SECONDS);
         }
 
         return queryRedisSupplier.get();
