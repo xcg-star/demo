@@ -13,4 +13,10 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface BlacklistMapper extends BaseMapper<Blacklist> {
 
+    /**
+     * 新增拉黑，当有冲突时更新
+     *
+     * @param blacklist 拉黑
+     */
+    void insertOnDuplicateUpdate(Blacklist blacklist);
 }

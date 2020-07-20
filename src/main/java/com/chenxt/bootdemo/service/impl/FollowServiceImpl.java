@@ -1,11 +1,14 @@
 package com.chenxt.bootdemo.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chenxt.bootdemo.base.enumeration.FollowRelationEnum;
 import com.chenxt.bootdemo.base.expection.BusinessException;
 import com.chenxt.bootdemo.base.expection.enumeration.BusinessExceptionCodeEnum;
 import com.chenxt.bootdemo.dto.BlacklistDTO;
 import com.chenxt.bootdemo.dto.FollowDTO;
+import com.chenxt.bootdemo.entity.Blacklist;
 import com.chenxt.bootdemo.entity.Follow;
 import com.chenxt.bootdemo.mapper.BlacklistMapper;
 import com.chenxt.bootdemo.mapper.FollowMapper;
@@ -20,10 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -105,23 +105,85 @@ public class FollowServiceImpl extends ServiceImpl<FollowMapper, Follow> impleme
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public FollowResultVO unFollow(Long toUserId, Long topicId, Long fromUserId) {
-        return null;
+    public FollowResultVO unFollow(Long toUserId, Long fromUserId) {
+        FollowResultVO followResultVO = new FollowResultVO();
+        // 初始关系
+        FollowRelationEnum relation = getFollowRelationEnum(fromUserId, toUserId);
+        switch (relation) {
+            case SELF:
+                // 不允许自己取关自己
+                throw new BusinessException(BusinessExceptionCodeEnum.UN_FOLLOW_SELF_NOT_ALLOW);
+            case MUTUAL_FOLLOW:
+            case FOLLOWED:
+                // 已关注
+                followResultVO.setRelation(FollowRelationEnum.NOT_FOLLOW.getCode());
+                break;
+            default:
+                // 其他情况没有变化
+                followResultVO.setRelation(relation.getCode());
+                return followResultVO;
+        }
+
+        baseMapper.delete(new UpdateWrapper<Follow>().lambda().set(Follow::getFromUserId, fromUserId).set(Follow::getToUserId, toUserId));
+        return followResultVO;
     }
 
     @Override
     public Map<String, FollowStatusVO> batchGetFollowStatus(Long fromUserId, List<Long> toUserIdList) {
-        return null;
+        Set<Long> followUserIdSet = followCacheService.getAllFollowUserIdSet(fromUserId);
+        Set<Long> fansIdSet = followCacheService.getAllFansIdSet(fromUserId);
+        Set<Long> blacklistIdSet = followCacheService.getAllBlacklistIdSet(fromUserId);
+        Set<Long> haterIdSet = followCacheService.getAllHaterIdSet(fromUserId);
+
+        List<Follow> followList = baseMapper.selectList(new QueryWrapper<Follow>().lambda().eq(Follow::getFromUserId, fromUserId));
+
+        Map<String, FollowStatusVO> followStatusVOMap = new HashMap<>(toUserIdList.size());
+        toUserIdList.forEach(toUserId -> {
+            FollowStatusVO followStatusVO = new FollowStatusVO();
+            followStatusVO.setRelation(getFollowRelationEnum(toUserId, fromUserId, followUserIdSet, fansIdSet, blacklistIdSet, haterIdSet).getCode());
+            followList.stream().filter(follow -> follow.getToUserId().equals(toUserId)).findFirst().ifPresent(follow -> followStatusVO.setFollowId(follow.getId()));
+
+            followStatusVOMap.put(toUserId.toString(), followStatusVO);
+        });
+        return followStatusVOMap;
     }
 
     @Override
     public BlacklistResultVO blacklist(BlacklistDTO blacklistDTO, Long fromUserId) {
-        return null;
+        Blacklist blacklist = new Blacklist();
+        blacklist.setFromUserId(fromUserId);
+
+        Long toUserId = blacklistDTO.getToUserId();
+        BlacklistResultVO blacklistResultVO = new BlacklistResultVO();
+        //不允许自己拉黑自己
+        BusinessExceptionCodeEnum.BLACKLIST_SELF_NOT_ALLOW.assertIsFalse(Objects.equals(fromUserId, toUserId));
+        //取关用户
+        unFollow(toUserId, fromUserId);
+        //反向取关用户
+        unFollow(fromUserId, toUserId);
+        //拉黑用户
+        blacklist.setToUserId(blacklistDTO.getToUserId());
+        blacklistMapper.insertOnDuplicateUpdate(blacklist);
+        blacklist = blacklistMapper.selectOne(new QueryWrapper<Blacklist>().lambda()
+                .eq(Blacklist::getFromUserId, fromUserId).eq(Blacklist::getToUserId, toUserId));
+        //更新拉黑用户列表缓存信息
+        followCacheService.addBlacklistUser(fromUserId, toUserId, blacklist.getUpdatedAt());
+        //设置新的关系
+        blacklistResultVO.setRelation(getFollowRelationEnum(fromUserId, toUserId).getCode());
+        blacklistResultVO.setBlacklistId(blacklist.getId());
+        return blacklistResultVO;
     }
 
     @Override
     public BlacklistResultVO unBlacklist(Long toUserId, Long fromUserId) {
-        return null;
+        BlacklistResultVO blacklistResultVO = new BlacklistResultVO();
+        blacklistMapper.delete(new UpdateWrapper<Blacklist>().lambda()
+                .eq(Blacklist::getFromUserId, fromUserId).eq(Blacklist::getToUserId, toUserId));
+        //更新拉黑用户列表缓存信息
+        followCacheService.removeBlacklistUser(fromUserId, toUserId);
+        //设置新的关系
+        blacklistResultVO.setRelation(getFollowRelationEnum(fromUserId, toUserId).getCode());
+        return blacklistResultVO;
     }
 
     private FollowRelationEnum getFollowRelationEnum(Long fromUserId, Long toUserId) {

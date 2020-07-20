@@ -54,7 +54,7 @@ public class FollowCacheService implements ICachedPrefix {
                 () -> followMapper.selectList(new QueryWrapper<Follow>().lambda().eq(Follow::getFromUserId, fromUserId)),
                 (redisConnection, followList) -> {
                     for (Follow follow : followList) {
-                        redisConnection.zAdd(redisKey.getBytes(), follow.getUpdatedAt().atZone(ZoneId.systemDefault()).toEpochSecond(), String.valueOf(follow.getToUserId()).getBytes());
+                        redisConnection.zAdd(redisKey.getBytes(), follow.getUpdatedAt().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(), String.valueOf(follow.getToUserId()).getBytes());
                     }
                 },
                 () -> getIdListByTimeLine(redisKey, timeline, count));
@@ -75,7 +75,7 @@ public class FollowCacheService implements ICachedPrefix {
                 () -> followMapper.selectList(new QueryWrapper<Follow>().lambda().eq(Follow::getToUserId, toUserId)),
                 (redisConnection, followList) -> {
                     for (Follow follow : followList) {
-                        redisConnection.zAdd(redisKey.getBytes(), follow.getUpdatedAt().atZone(ZoneId.systemDefault()).toEpochSecond(), String.valueOf(follow.getFromUserId()).getBytes());
+                        redisConnection.zAdd(redisKey.getBytes(), follow.getUpdatedAt().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(), String.valueOf(follow.getFromUserId()).getBytes());
                     }
                 },
                 () -> getIdListByTimeLine(redisKey, timeline, count));
@@ -94,7 +94,7 @@ public class FollowCacheService implements ICachedPrefix {
                 () -> followMapper.selectList(new QueryWrapper<Follow>().lambda().eq(Follow::getFromUserId, fromUserId)),
                 (redisConnection, followList) -> {
                     for (Follow follow : followList) {
-                        redisConnection.zAdd(redisKey.getBytes(), follow.getUpdatedAt().atZone(ZoneId.systemDefault()).toEpochSecond(), String.valueOf(follow.getToUserId()).getBytes());
+                        redisConnection.zAdd(redisKey.getBytes(), follow.getUpdatedAt().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(), String.valueOf(follow.getToUserId()).getBytes());
                     }
                 },
                 () -> RedisApi.zrevrange(redisKey, 0, -1).stream().map(id -> Long.parseLong(id.toString())).collect(Collectors.toSet()));
@@ -113,7 +113,7 @@ public class FollowCacheService implements ICachedPrefix {
                 () -> followMapper.selectList(new QueryWrapper<Follow>().lambda().eq(Follow::getToUserId, toUserId)),
                 (redisConnection, followList) -> {
                     for (Follow follow : followList) {
-                        redisConnection.zAdd(redisKey.getBytes(), follow.getUpdatedAt().atZone(ZoneId.systemDefault()).toEpochSecond(), String.valueOf(follow.getFromUserId()).getBytes());
+                        redisConnection.zAdd(redisKey.getBytes(), follow.getUpdatedAt().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(), String.valueOf(follow.getFromUserId()).getBytes());
                     }
                 },
                 () -> RedisApi.zrevrange(redisKey, 0, -1).stream().map(id -> Long.parseLong(id.toString())).collect(Collectors.toSet()));
@@ -132,7 +132,7 @@ public class FollowCacheService implements ICachedPrefix {
                 () -> blacklistMapper.selectList(new QueryWrapper<Blacklist>().lambda().eq(Blacklist::getFromUserId, fromUserId)),
                 (redisConnection, blacklistList) -> {
                     for (Blacklist blacklist : blacklistList) {
-                        redisConnection.zAdd(redisKey.getBytes(), blacklist.getUpdatedAt().atZone(ZoneId.systemDefault()).toEpochSecond(), String.valueOf(blacklist.getToUserId()).getBytes());
+                        redisConnection.zAdd(redisKey.getBytes(), blacklist.getUpdatedAt().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(), String.valueOf(blacklist.getToUserId()).getBytes());
                     }
                 },
                 () -> RedisApi.zrevrange(redisKey, 0, -1).stream().map(id -> Long.parseLong(id.toString())).collect(Collectors.toSet()));
@@ -145,16 +145,46 @@ public class FollowCacheService implements ICachedPrefix {
      * @return 黑子用户id集合
      */
     public Set<Long> getAllHaterIdSet(Long toUserId) {
-        String redisKey = String.format(bootdemo_follow_blacklist, toUserId);
+        String redisKey = String.format(bootdemo_follow_hater, toUserId);
         return commonSupplier(redisKey,
                 getEmptyBlacklist(),
                 () -> blacklistMapper.selectList(new QueryWrapper<Blacklist>().lambda().eq(Blacklist::getToUserId, toUserId)),
                 (redisConnection, blacklistList) -> {
                     for (Blacklist blacklist : blacklistList) {
-                        redisConnection.zAdd(redisKey.getBytes(), blacklist.getUpdatedAt().atZone(ZoneId.systemDefault()).toEpochSecond(), String.valueOf(blacklist.getFromUserId()).getBytes());
+                        redisConnection.zAdd(redisKey.getBytes(), blacklist.getUpdatedAt().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(), String.valueOf(blacklist.getFromUserId()).getBytes());
                     }
                 },
                 () -> RedisApi.zrevrange(redisKey, 0, -1).stream().map(id -> Long.parseLong(id.toString())).collect(Collectors.toSet()));
+    }
+
+    /**
+     * 新增拉黑用户
+     *
+     * @param fromUserId 拉黑用户id
+     * @param toUserId   被拉黑用户id
+     * @param updatedAt  更新时间
+     */
+    public void addBlacklistUser(Long fromUserId, Long toUserId, LocalDateTime updatedAt) {
+        String redisKey = String.format(bootdemo_follow_blacklist, fromUserId);
+        commonConsumer(redisKey,
+                () -> blacklistMapper.selectList(new QueryWrapper<Blacklist>().lambda().eq(Blacklist::getFromUserId, fromUserId)),
+                (redisConnection, blacklistList) -> {
+                    for (Blacklist blacklist : blacklistList) {
+                        redisConnection.zAdd(redisKey.getBytes(), blacklist.getUpdatedAt().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(), String.valueOf(blacklist.getToUserId()).getBytes());
+                    }
+                },
+                emptyParameter -> RedisApi.zAdd(redisKey, toUserId, updatedAt.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()));
+    }
+
+    /**
+     * 删除拉黑用户
+     *
+     * @param fromUserId 拉黑用户id
+     * @param toUserId   被拉黑用户id
+     */
+    public void removeBlacklistUser(Long fromUserId, Long toUserId) {
+        String redisKey = String.format(bootdemo_follow_blacklist, fromUserId);
+        RedisApi.zrem(redisKey, toUserId);
     }
 
     private <T, R> R commonSupplier(String redisKey,

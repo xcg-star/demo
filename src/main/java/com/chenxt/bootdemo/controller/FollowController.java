@@ -80,9 +80,8 @@ public class FollowController {
     })
     @DeleteMapping("/follow")
     public FollowResultVO unfollow(@RequestParam(required = false) Long toUserId,
-                                   @RequestParam(required = false) Long topicId,
                                    @RequestParam Long currentUserId) {
-        return followService.unFollow(toUserId, topicId, currentUserId);
+        return followService.unFollow(toUserId, currentUserId);
     }
 
     @ApiOperation(value = "批量获取是否关注", produces = "application/json")
@@ -100,6 +99,11 @@ public class FollowController {
     @PostMapping("/blacklist")
     public BlacklistResultVO blacklist(@RequestBody BlacklistDTO blacklistDTO,
                                        @RequestParam Long currentUserId) {
+        //TODO 若用户不存在抛出异常
+//        UserExistVO userExistVO = userClient.isExist(blacklistDTO.getToUserId());
+//        if (!userExistVO.getIsExist()) {
+//            throw new BusinessException(CodeStatusEnum.USER_NOT_EXIST.getCode(), CodeStatusEnum.USER_NOT_EXIST.getMessage());
+//        }
         return followService.blacklist(blacklistDTO, currentUserId);
     }
 

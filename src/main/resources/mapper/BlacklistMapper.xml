@@ -11,4 +11,10 @@
         <result column="created_at" property="createdAt" />
         <result column="updated_at" property="updatedAt" />
     </resultMap>
+    <insert id="insertOnDuplicateUpdate">
+        insert into blacklist (id,from_user_id,to_user_id)
+        values (#{id},#{fromUserId},#{toUserId})
+        on duplicate key
+            update updated_at = current_timestamp(),is_deleted = false;
+    </insert>
 </mapper>

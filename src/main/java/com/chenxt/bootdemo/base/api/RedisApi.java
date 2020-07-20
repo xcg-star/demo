@@ -267,6 +267,18 @@ public class RedisApi {
     /**- - - - - - - - - - - - - - - - - - -  Sorted Set - - - - - - - - - - - - - - - - - - - -*/
 
     /**
+     * 有序集合添加
+     *
+     * @param key
+     * @param value
+     * @param score
+     */
+    public static void zAdd(String key, Object value, double score) {
+        ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
+        zset.add(key, value, score);
+    }
+
+    /**
      * 获取倒序集合
      *
      * @param key

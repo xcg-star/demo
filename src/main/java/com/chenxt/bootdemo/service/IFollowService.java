@@ -1,9 +1,9 @@
 package com.chenxt.bootdemo.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.chenxt.bootdemo.dto.BlacklistDTO;
 import com.chenxt.bootdemo.dto.FollowDTO;
 import com.chenxt.bootdemo.entity.Follow;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.chenxt.bootdemo.vo.BlacklistResultVO;
 import com.chenxt.bootdemo.vo.FollowResultVO;
 import com.chenxt.bootdemo.vo.FollowStatusVO;
@@ -26,7 +26,7 @@ public interface IFollowService extends IService<Follow> {
 
     FollowResultVO follow(FollowDTO followDTO, Long currentUserId);
 
-    FollowResultVO unFollow(Long toUserId, Long topicId, Long currentUserId);
+    FollowResultVO unFollow(Long toUserId, Long currentUserId);
 
     Map<String, FollowStatusVO> batchGetFollowStatus(Long fromUserId, List<Long> toUserIdList);
 

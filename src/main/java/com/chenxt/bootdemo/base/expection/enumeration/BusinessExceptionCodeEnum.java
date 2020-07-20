@@ -103,6 +103,11 @@ public enum BusinessExceptionCodeEnum implements BusinessExceptionAssert {
      */
     BLACKLISTED_FOLLOW(-1109, "您已拉黑用户，请先到个人主页解除拉黑"),
 
+    /**
+     * 不允许自己取关自己
+     */
+    UN_FOLLOW_SELF_NOT_ALLOW(-1112, "不允许自己取关自己"),
+
     ;
 
     private int code;
