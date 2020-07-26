@@ -78,3 +78,26 @@ CREATE TABLE IF NOT EXISTS `blacklist`
 
 -- changeset chenxt:4
 alter table `follow` modify column `to_user_id` bigint (20) NOT NULL COMMENT '关注用户编号';
+
+-- changeset chenxt:5
+CREATE TABLE IF NOT EXISTS `admin_user`
+(
+    `id`              bigint(20)   NOT NULL AUTO_INCREMENT COMMENT '编号 - 自增',
+    `name`            varchar(128) NOT NULL COMMENT '姓名',
+    `avatar`          varchar(128) NOT NULL COMMENT '头像',
+    `account`         varchar(128) NOT NULL COMMENT '账号',
+    `password`        varchar(32)  NOT NULL COMMENT '密码',
+    `secret`          varchar(32)  NOT NULL COMMENT '密钥',
+    `secret_qr_code`  varchar(512) NOT NULL COMMENT '密钥二维码',
+    `remark`          varchar(32)  NOT NULL COMMENT '备注',
+    `is_enable`       tinyint(1)   NOT NULL DEFAULT '1' COMMENT '状态(true:正常,false:封禁)',
+    `created_at`      timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at`      timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    `type`            int(11)      NOT NULL DEFAULT '1' COMMENT '类型(3:超级管理员,2:管理员,1:普通用户)',
+    `is_admin_enable` tinyint(1)   NOT NULL DEFAULT '0' COMMENT '状态(true:启用,false:禁用)',
+    UNIQUE KEY `uk_admin_user_account` (`account`) USING BTREE COMMENT '账号不能重复',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 0
+  DEFAULT CHARSET = utf8mb4
+  ROW_FORMAT = DYNAMIC COMMENT ='后台管理用户';
