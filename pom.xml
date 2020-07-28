@@ -96,6 +96,12 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!-- postgres -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.14</version>
+        </dependency>
         <!-- redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -252,6 +258,12 @@
             <groupId>com.alibaba.otter</groupId>
             <artifactId>canal.client</artifactId>
             <version>1.1.4</version>
+        </dependency>
+        <!-- dynamic-datasource -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+            <version>3.1.1</version>
         </dependency>
     </dependencies>
 
