@@ -1,6 +1,7 @@
 package com.chenxt.bootdemo.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.chenxt.bootdemo.dto.UserDTO;
 import com.chenxt.bootdemo.dto.UserLoginDTO;
 import com.chenxt.bootdemo.entity.User;
 import com.chenxt.bootdemo.vo.UserVO;
@@ -20,4 +21,13 @@ public interface IUserService extends IService<User> {
      * @return 登陆用户信息
      */
     UserVO login(UserLoginDTO userLoginDTO);
+
+    /**
+     * 更新用户
+     *
+     * @param userId  用户编号
+     * @param userDTO 用户
+     * @return 用户VO
+     */
+    UserVO updateUserById(Long userId, UserDTO userDTO);
 }

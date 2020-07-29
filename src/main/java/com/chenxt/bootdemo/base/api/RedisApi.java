@@ -1,7 +1,7 @@
 package com.chenxt.bootdemo.base.api;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cglib.beans.BeanMap;
+import org.apache.commons.beanutils.BeanMap;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;

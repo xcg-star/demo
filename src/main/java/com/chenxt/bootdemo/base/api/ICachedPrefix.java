@@ -19,6 +19,11 @@ public interface ICachedPrefix {
     String bootdemo_user_nickname_index = "bootdemo:user:nickname:index";
 
     /**
+     * 黑子列表
+     */
+    String bootdemo_user_detail = "bootdemo:user:detail:%s";
+
+    /**
      * 验证码
      */
     String bootdemo_user_verifycode = "bootdemo:user:verifycode:%s:%s";

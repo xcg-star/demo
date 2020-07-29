@@ -74,6 +74,11 @@ public enum BusinessExceptionCodeEnum implements BusinessExceptionAssert {
     PHONE_ERROR(-213, "不是正确的手机号码"),
 
     /**
+     * 该昵称已被使用
+     */
+    NICKNAME_EXIST_ERROR(-236, "该昵称已被使用"),
+
+    /**
      * 语言错误
      */
     LANGUAGE_NOT_EXIST(-247, "语言不存在"),

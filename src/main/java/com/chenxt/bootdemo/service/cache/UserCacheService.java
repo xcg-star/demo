@@ -2,8 +2,11 @@ package com.chenxt.bootdemo.service.cache;
 
 import com.chenxt.bootdemo.base.api.ICachedPrefix;
 import com.chenxt.bootdemo.base.api.RedisApi;
+import com.chenxt.bootdemo.base.constrants.TimeConstants;
+import com.chenxt.bootdemo.entity.User;
 import com.chenxt.bootdemo.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -123,4 +126,19 @@ public class UserCacheService implements ICachedPrefix {
         RedisApi.setList(key, indexList);
     }
 
+    /**
+     * 将用户放入缓存
+     *
+     * @param user 用户
+     */
+    public void setUserInCache(User user) {
+        String userDetailRedisKey = String.format(bootdemo_user_detail, user.getId());
+        setInCacheWithHash(userDetailRedisKey, user, TimeConstants.ONE_DAY_SECONDS);
+    }
+
+    private void setInCacheWithHash(String key, Object obj, Long seconds) {
+        BeanMap beanMap = new BeanMap(obj);
+        RedisApi.hSetAll(key, beanMap);
+        RedisApi.expire(key, seconds, TimeUnit.SECONDS);
+    }
 }

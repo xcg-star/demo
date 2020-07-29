@@ -1,5 +1,6 @@
 package com.chenxt.bootdemo.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chenxt.bootdemo.base.api.ICachedPrefix;
 import com.chenxt.bootdemo.base.api.RedisReentrantLock;
@@ -7,6 +8,7 @@ import com.chenxt.bootdemo.base.expection.BusinessException;
 import com.chenxt.bootdemo.base.expection.enumeration.BusinessExceptionCodeEnum;
 import com.chenxt.bootdemo.base.util.Md5Utils;
 import com.chenxt.bootdemo.base.util.PhoneUtils;
+import com.chenxt.bootdemo.dto.UserDTO;
 import com.chenxt.bootdemo.dto.UserLoginDTO;
 import com.chenxt.bootdemo.entity.User;
 import com.chenxt.bootdemo.mapper.UserMapper;
@@ -18,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -77,6 +80,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             }
         }
 
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(user, userVO);
+        return userVO;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public UserVO updateUserById(Long userId, UserDTO userDTO) {
+        User user = new User();
+        BeanUtils.copyProperties(userDTO, user);
+
+        user.setId(userId);
+        user = updateUser(user);
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user, userVO);
         return userVO;
@@ -194,5 +210,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             }
         }
         return "用户" + String.format("%08d", nickNameIndex);
+    }
+
+    private User updateUser(User user) {
+        Integer count = baseMapper.selectCount(new QueryWrapper<User>().lambda().ne(User::getId, user.getId()).eq(User::getNickName, user.getNickName()));
+        BusinessExceptionCodeEnum.NICKNAME_EXIST_ERROR.assertIsFalse(count > 0);
+        baseMapper.updateById(user);
+        user = baseMapper.selectById(user.getId());
+        userCacheService.setUserInCache(user);
+        return user;
     }
 }
