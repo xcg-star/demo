@@ -6,6 +6,7 @@ import com.chenxt.bootdemo.base.api.ICachedPrefix;
 import com.chenxt.bootdemo.base.api.RedisReentrantLock;
 import com.chenxt.bootdemo.base.expection.BusinessException;
 import com.chenxt.bootdemo.base.expection.enumeration.BusinessExceptionCodeEnum;
+import com.chenxt.bootdemo.base.security.Token;
 import com.chenxt.bootdemo.base.util.Md5Utils;
 import com.chenxt.bootdemo.base.util.PhoneUtils;
 import com.chenxt.bootdemo.dto.UserDTO;
@@ -15,6 +16,7 @@ import com.chenxt.bootdemo.mapper.UserMapper;
 import com.chenxt.bootdemo.mapper.UserNickNameIndexMapper;
 import com.chenxt.bootdemo.service.IUserService;
 import com.chenxt.bootdemo.service.cache.UserCacheService;
+import com.chenxt.bootdemo.vo.UserSearchResultVO;
 import com.chenxt.bootdemo.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -25,6 +27,8 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 
 /**
@@ -96,6 +100,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user, userVO);
         return userVO;
+    }
+
+    @Override
+    public List<UserSearchResultVO> searchByNickName(String nickName, Integer page, Integer size, Token token) {
+        //TODO
+        return new ArrayList<>();
     }
 
     private User register(UserLoginDTO userLoginDTO) {
