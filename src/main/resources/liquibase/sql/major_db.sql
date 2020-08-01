@@ -101,3 +101,80 @@ CREATE TABLE IF NOT EXISTS `admin_user`
   AUTO_INCREMENT = 0
   DEFAULT CHARSET = utf8mb4
   ROW_FORMAT = DYNAMIC COMMENT ='后台管理用户';
+
+-- changeset chenxt:6
+CREATE TABLE IF NOT EXISTS `admin_group`
+(
+    `id`         bigint(20)   NOT NULL AUTO_INCREMENT COMMENT '编号 - 自增',
+    `name`       varchar(128) NOT NULL COMMENT '名称',
+    `remark`     varchar(512) NOT NULL COMMENT '备注',
+    `is_enable`  tinyint(1)   NOT NULL DEFAULT '1' COMMENT '状态(true:启用,false:禁用)',
+    `created_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 0
+  DEFAULT CHARSET = utf8mb4
+  ROW_FORMAT = DYNAMIC COMMENT ='后台管理用户组';
+
+CREATE TABLE IF NOT EXISTS `admin_group_user_link`
+(
+    `id`             bigint(20) NOT NULL AUTO_INCREMENT COMMENT '编号 - 自增',
+    `admin_user_id`  bigint(20) NOT NULL COMMENT '用户id(admin_user.id)',
+    `admin_group_id` bigint(20) NOT NULL COMMENT '用户组id(admin_group.id)',
+    `created_at`     timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at`     timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE KEY `idx_admin_group_user_link_admin_group_id_admin_user_id` (`admin_group_id`, `admin_user_id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 0
+  DEFAULT CHARSET = utf8mb4
+  ROW_FORMAT = DYNAMIC COMMENT ='后台管理用户组与用户关系';
+
+CREATE TABLE IF NOT EXISTS `admin_menu`
+(
+    `id`            bigint(20)   NOT NULL AUTO_INCREMENT COMMENT '编号 - 自增',
+    `parent_id`     bigint(20)            DEFAULT NULL COMMENT '父级菜单id,若为一级菜单则为空(admin_menu.id)',
+    `name`          varchar(128) NOT NULL COMMENT '名称',
+    `url`           varchar(512) NOT NULL COMMENT '前端页面路径',
+    `is_enable`     tinyint(1)   NOT NULL DEFAULT '1' COMMENT '状态(true:显示,false:隐藏)',
+    `created_at`    timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at`    timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    `icon`          varchar(128)          DEFAULT NULL COMMENT '图标',
+    `order_num`     int(11)      NOT NULL DEFAULT '0' COMMENT '排序号码',
+    `is_modifiable` tinyint(1)   NOT NULL DEFAULT '1' COMMENT '可否修改(true:可以,false:不能)',
+    `en_name`       varchar(128) NOT NULL COMMENT '英文名称',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 0
+  DEFAULT CHARSET = utf8mb4
+  ROW_FORMAT = DYNAMIC COMMENT ='后台管理菜单';
+
+CREATE TABLE IF NOT EXISTS `admin_permission`
+(
+    `id`            bigint(20) NOT NULL AUTO_INCREMENT COMMENT '编号 - 自增',
+    `admin_menu_id` bigint(20) NOT NULL COMMENT '对应菜单id(admin_menu.id)',
+    `created_at`    timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at`    timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 0
+  DEFAULT CHARSET = utf8mb4
+  ROW_FORMAT = DYNAMIC COMMENT ='后台管理权限';
+
+CREATE TABLE IF NOT EXISTS `admin_permission_link`
+(
+    `id`                  bigint(20) NOT NULL AUTO_INCREMENT COMMENT '编号 - 自增',
+    `admin_permission_id` bigint(20) NOT NULL COMMENT '权限id(admin_permission.id)',
+    `admin_user_id`       bigint(20)          DEFAULT NULL COMMENT '用户id(admin_user.id)',
+    `admin_group_id`      bigint(20)          DEFAULT NULL COMMENT '用户组id(admin_group.id)',
+    `is_button_enable`    tinyint(1) NOT NULL DEFAULT '1' COMMENT '页面下所有按钮状态(true:显示,false:隐藏)',
+    `created_at`          timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at`          timestamp  NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE KEY `idx_admin_permission_link_admin_permission_id_admin_user_id` (`admin_permission_id`, `admin_user_id`),
+    UNIQUE KEY `idx_admin_permission_link_admin_permission_id_admin_group_id` (`admin_permission_id`, `admin_group_id`)
+) ENGINE = InnoDB
+  AUTO_INCREMENT = 0
+  DEFAULT CHARSET = utf8mb4
+  ROW_FORMAT = DYNAMIC COMMENT ='后台管理权限与用户和用户组的关系';
