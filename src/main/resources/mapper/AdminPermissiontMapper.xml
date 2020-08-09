@@ -2,4 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.chenxt.bootdemo.mapper.AdminPermissionMapper">
 
+    <select id="selectByMenuId" resultType="com.chenxt.bootdemo.entity.AdminPermission">
+        select * from admin_permission where admin_menu_id = #{menuId}
+    </select>
 </mapper>
