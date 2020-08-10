@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenxt.bootdemo.mapper.AdminGroupMapper">
+
+    <select id="selectByName" resultType="com.chenxt.bootdemo.entity.AdminGroup">
+        select * from admin_group where name = #{name}
+    </select>
+    <select id="selectPageVo" resultType="com.chenxt.bootdemo.entity.AdminGroup">
+        select admin_group.*,
+               (select count(1) from admin_group_user_link where admin_group_id = admin_group.id) userCount
+        from admin_group
+        where 1=1
+        <if test="queryParam.name != null and queryParam.name != ''">
+            and name like concat('%',#{queryParam.name},'%')
+        </if>
+        order by created_at desc,id desc
+    </select>
+    <select id="selectListByName" resultType="com.chenxt.bootdemo.entity.AdminGroup">
+        select * from admin_group
+        where 1=1
+        <if test="name!=null and name!=''">
+            and name like concat('%',#{name},'%')
+        </if>
+        order by created_at desc,id desc
+    </select>
+</mapper>
