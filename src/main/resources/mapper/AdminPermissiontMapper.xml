@@ -5,4 +5,5 @@
     <select id="selectByMenuId" resultType="com.chenxt.bootdemo.entity.AdminPermission">
         select * from admin_permission where admin_menu_id = #{menuId}
     </select>
+
 </mapper>
