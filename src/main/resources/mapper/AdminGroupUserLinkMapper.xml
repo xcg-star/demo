@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenxt.bootdemo.mapper.AdminGroupUserLinkMapper">
+    <insert id="insertByGroupIdListAndUserIdOnDuplicateDoNoting">
+        insert into admin_group_user_link(admin_user_id, admin_group_id)
+        values
+        <foreach collection="groupIdList" item="groupId" separator=",">
+            (#{userId},#{groupId})
+        </foreach>
+        on duplicate key update id = id
+    </insert>
+    <insert id="insertByGroupIdAndUserIdListOnDuplicateDoNoting">
+        insert into admin_group_user_link(admin_user_id, admin_group_id)
+        values
+        <foreach collection="userIdList" item="userId" separator=",">
+            (#{userId},#{groupId})
+        </foreach>
+        on duplicate key update id = id
+    </insert>
+    <delete id="deleteByUserIdAndNotInGroupIdList">
+        delete from admin_group_user_link
+        where admin_user_id = #{userId}
+        <if test="groupIdList.size() > 0">
+            and admin_group_id not in
+            <foreach collection="groupIdList" item="groupId" separator="," open="(" close=")">
+                #{groupId}
+            </foreach>
+        </if>
+    </delete>
+    <delete id="deleteByGroupIdAndNotInUserIdList">
+        delete from admin_group_user_link
+        where admin_group_id = #{groupId}
+        <if test="userIdList.size() > 0">
+            and admin_user_id not in
+            <foreach collection="userIdList" item="userId" separator="," open="(" close=")">
+                #{userId}
+            </foreach>
+        </if>
+    </delete>
+    <delete id="deleteByUserId">
+        delete from admin_group_user_link where admin_user_id = #{userId}
+    </delete>
+
+    <select id="selectByGroupId" resultType="com.chenxt.bootdemo.entity.AdminGroupUserLink">
+        select * from admin_group_user_link where admin_group_id = #{groupId}
+    </select>
+    <select id="selectPageVoByUserId" resultType="com.chenxt.bootdemo.entity.AdminGroupUserLink">
+        select * from admin_group_user_link
+        where admin_user_id = #{userId}
+        order by updated_at desc,id desc
+    </select>
+    <select id="selectPageVoByGroupId" resultType="com.chenxt.bootdemo.entity.AdminGroupUserLink">
+        select * from admin_group_user_link
+        where admin_group_id = #{groupId}
+        order by updated_at desc,id desc
+    </select>
+    <select id="selectByUserId" resultType="com.chenxt.bootdemo.entity.AdminGroupUserLink">
+        select * from admin_group_user_link
+        where admin_user_id = #{userId}
+        order by updated_at desc,id desc
+    </select>
+    <select id="countByGroupId" resultType="java.lang.Integer">
+        select count(1) from admin_group_user_link where admin_group_id = #{groupId}
+    </select>
+</mapper>
