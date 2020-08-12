@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenxt.bootdemo.mapper.AdminMenuMapper">
+
+    <select id="hasChildren" resultType="java.lang.Boolean">
+        select exists(select 1 from admin_menu where parent_id = #{id})
+    </select>
+    <select id="selectByNameAndParentId" resultType="com.chenxt.bootdemo.entity.AdminMenu">
+        select * from admin_menu
+        where name like concat('%',#{name},'5')
+        <choose>
+            <when test="parentId == null"> and parent_id is null</when>
+            <otherwise> and parent_id = #{parentId}</otherwise>
+        </choose>
+    </select>
+    <select id="selectParentListOrder" resultType="com.chenxt.bootdemo.entity.AdminMenu">
+        select * from admin_menu
+        where parent_id is null
+        <if test="mustEnable">
+          and is_enable
+        </if>
+        order by order_num,name
+    </select>
+    <select id="selectChildrenListOrder" resultType="com.chenxt.bootdemo.entity.AdminMenu">
+        select * from admin_menu
+        where parent_id is not null
+        <if test="mustEnable">
+            and is_enable
+        </if>
+        order by order_num,name
+    </select>
+</mapper>
