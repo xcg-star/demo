@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenxt.bootdemo.mapper.AdminPermissionLinkMapper">
+    <delete id="deleteByUserIdAndNotInPermissionIdList">
+        delete from admin_permission_link
+        where admin_user_id = #{userId}
+        <if test="permissionIdList.size() > 0">
+            and admin_permission_id not in
+            <foreach collection="permissionIdList" item="permissionId" separator="," open="(" close=")">
+                #{permissionId}
+            </foreach>
+        </if>
+    </delete>
+    <delete id="deleteByGroupIdAndNotInPermissionIdList">
+        delete from admin_permission_link
+        where admin_group_id = #{groupId}
+        <if test="permissionIdList.size() > 0">
+            and admin_permission_id not in
+            <foreach collection="permissionIdList" item="permissionId" separator="," open="(" close=")">
+                #{permissionId}
+            </foreach>
+        </if>
+    </delete>
+    <delete id="deleteByPermissionId">
+        delete from admin_permission_link
+        where admin_permission_id = #{permissionId}
+    </delete>
+    <delete id="deleteByUserId">
+        delete from admin_permission_link
+        where admin_user_id = #{userId}
+    </delete>
+    <delete id="deleteByGroupId">
+        delete from admin_permission_link
+        where admin_group_id = #{groupId}
+    </delete>
+
+    <select id="selectPageVoByUserId" resultType="com.chenxt.bootdemo.entity.AdminPermissionLink">
+        select * from admin_permission_link
+        where admin_user_id = #{userId}
+        order by updated_at desc,id desc
+    </select>
+    <select id="selectExtendPageVoByUserId" resultType="com.chenxt.bootdemo.entity.AdminPermissionLink">
+        select * from admin_permission_link
+        where admin_group_id in (
+            select admin_group_id from admin_group_user_link where admin_group_user_link.admin_user_id = #{userId}
+        )
+        and (select is_enable from admin_group where admin_group.id = admin_permission_link.admin_group_id)
+        <if test="groupId!=null">
+            and admin_group_id = #{groupId}
+        </if>
+        order by updated_at desc,id desc
+    </select>
+    <select id="selectPageVoByGroupId" resultType="com.chenxt.bootdemo.entity.AdminPermissionLink">
+        select * from admin_permission_link
+        where admin_group_id = #{groupId}
+        order by updated_at desc,id desc
+    </select>
+
+    <select id="selectPermissionIdListWithExtendByUserId" resultType="com.chenxt.bootdemo.entity.AdminPermissionLink">
+        select admin_permission_id,max(is_button_enable) "is_button_enable" from admin_permission_link
+        where admin_user_id = #{userId}
+        or admin_group_id in (
+            select admin_group_id from admin_group_user_link
+            where admin_group_user_link.admin_user_id = #{userId} and (
+                select is_enable from admin_group where admin_group.id = admin_group_user_link.admin_group_id
+            )
+        )
+        group by admin_permission_id
+    </select>
+    <select id="selectPermissionIdListOnlyWithExtendByUserId" resultType="java.lang.Long">
+        select distinct(admin_permission_id) from admin_permission_link
+        where admin_group_id in (
+            select admin_group_id from admin_group_user_link
+            where admin_group_user_link.admin_user_id = #{userId} and (
+                select is_enable from admin_group where admin_group.id = admin_group_user_link.admin_group_id
+            )
+        )
+    </select>
+    <select id="selectListByUserId" resultType="com.chenxt.bootdemo.entity.AdminPermissionLink">
+        select * from admin_permission_link
+        where admin_user_id = #{userId}
+    </select>
+    <select id="selectListByGroupId" resultType="com.chenxt.bootdemo.entity.AdminPermissionLink">
+        select * from admin_permission_link
+        where admin_group_id = #{groupId}
+    </select>
+</mapper>
