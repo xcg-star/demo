@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenxt.bootdemo.mapper.AdminUserMapper">
+
+    <select id="selectByAccount" resultType="com.chenxt.bootdemo.entity.AdminUser">
+        select * from admin_user
+        where account = #{account}
+    </select>
+    <select id="selectByName" resultType="com.chenxt.bootdemo.entity.AdminUser">
+        select * from admin_user
+        where name = #{name}
+    </select>
+    <select id="selectPageVo" resultType="com.chenxt.bootdemo.entity.AdminUser">
+        select * from admin_user
+        where type &lt;> 3
+        <if test="queryParam.isEnable != null">
+            and is_enable = #{queryParam.isEnable}
+        </if>
+        <if test="queryParam.name != null and queryParam.name != ''">
+            and name like concat('%',#{queryParam.name},'%')
+        </if>
+        <if test="queryParam.account != null and queryParam.account != ''">
+            and account = #{queryParam.account}
+        </if>
+        <if test="queryParam.groupId != null and queryParam.groupId != ''">
+            and exists(select 1 from admin_group_user_link where admin_user_id = admin_user.id and admin_group_id = #{groupId})
+        </if>
+        order by created_at desc,id desc
+    </select>
+    <select id="selectCommonUserListByName" resultType="com.chenxt.bootdemo.entity.AdminUser">
+        select * from admin_user
+        where (type = 1 or
+        <if test="name!=null and name!=''">
+            and name like concat('%',#{name},'%')
+        </if>
+        order by created_at desc,id desc
+    </select>
+    <select id="selectAdministratorByName" resultType="com.chenxt.bootdemo.entity.AdminUser">
+        select * from admin_user
+        where type = 2
+        <if test="name!=null and name!=''">
+            and name like concat('%',#{name},'%')
+        </if>
+        order by created_at desc,id desc
+    </select>
+    <select id="selectUserListByName" resultType="com.chenxt.bootdemo.entity.AdminUser">
+        select * from admin_user
+        where 1=1
+        <if test="name!=null and name!=''">
+            and name like concat('%',#{name},'%')
+        </if>
+        order by created_at desc,id desc
+    </select>
+</mapper>
