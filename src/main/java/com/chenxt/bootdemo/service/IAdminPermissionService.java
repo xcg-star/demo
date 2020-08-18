@@ -27,4 +27,12 @@ public interface IAdminPermissionService {
      * @return 验证结果 admin user vo
      */
     AdminUserVO authorize(AdminUserVerifyCodeDTO adminUserVerifyCodeDTO);
+
+    /**
+     * 重置密钥
+     *
+     * @param userId 用户id
+     * @return the admin user
+     */
+    void resetSecret(Long userId);
 }

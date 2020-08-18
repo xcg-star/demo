@@ -23,4 +23,9 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
     public AdminUserVO authorize(AdminUserVerifyCodeDTO adminUserVerifyCodeDTO) {
         return null;
     }
+
+    @Override
+    public void resetSecret(Long userId) {
+
+    }
 }
