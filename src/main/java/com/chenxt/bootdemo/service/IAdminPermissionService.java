@@ -1,5 +1,6 @@
 package com.chenxt.bootdemo.service;
 
+import com.chenxt.bootdemo.dto.AdminUserDTO;
 import com.chenxt.bootdemo.dto.AdminUserLoginDTO;
 import com.chenxt.bootdemo.dto.AdminUserVerifyCodeDTO;
 import com.chenxt.bootdemo.vo.AdminUserVO;
@@ -35,4 +36,12 @@ public interface IAdminPermissionService {
      * @return the admin user
      */
     void resetSecret(Long userId);
+
+    /**
+     * 添加用户
+     *
+     * @param adminUserDTO 用户
+     * @return 添加结果 boolean
+     */
+    Boolean addUser(AdminUserDTO adminUserDTO);
 }

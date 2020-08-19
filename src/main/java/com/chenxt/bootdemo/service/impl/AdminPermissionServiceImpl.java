@@ -1,5 +1,6 @@
 package com.chenxt.bootdemo.service.impl;
 
+import com.chenxt.bootdemo.dto.AdminUserDTO;
 import com.chenxt.bootdemo.dto.AdminUserLoginDTO;
 import com.chenxt.bootdemo.dto.AdminUserVerifyCodeDTO;
 import com.chenxt.bootdemo.service.IAdminPermissionService;
@@ -27,5 +28,10 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
     @Override
     public void resetSecret(Long userId) {
 
+    }
+
+    @Override
+    public Boolean addUser(AdminUserDTO adminUserDTO) {
+        return null;
     }
 }
