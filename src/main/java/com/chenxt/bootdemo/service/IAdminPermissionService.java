@@ -44,4 +44,12 @@ public interface IAdminPermissionService {
      * @return 添加结果 boolean
      */
     Boolean addUser(AdminUserDTO adminUserDTO);
+
+    /**
+     * 查询用户名是否存在
+     *
+     * @param name 用户名
+     * @return 是否存在 boolean
+     */
+    Boolean isUserNameExist(String name);
 }

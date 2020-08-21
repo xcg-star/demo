@@ -24,7 +24,7 @@ public class QrcodeUtils {
         //设置生个图片格式
         String format = "png";
         //设置二维码内容
-        String context = "test";
+        String context = "http://120.25.205.85:8080/1.png";
         //设置额外参数
         Map<EncodeHintType, Object> map = new HashMap<>();
         //设置编码集

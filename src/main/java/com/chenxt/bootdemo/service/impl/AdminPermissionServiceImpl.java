@@ -34,4 +34,9 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
     public Boolean addUser(AdminUserDTO adminUserDTO) {
         return null;
     }
+
+    @Override
+    public Boolean isUserNameExist(String name) {
+        return null;
+    }
 }
