@@ -39,4 +39,9 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
     public Boolean isUserNameExist(String name) {
         return null;
     }
+
+    @Override
+    public Boolean isUserAccountExist(String account) {
+        return null;
+    }
 }

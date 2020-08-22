@@ -52,4 +52,12 @@ public interface IAdminPermissionService {
      * @return 是否存在 boolean
      */
     Boolean isUserNameExist(String name);
+
+    /**
+     * 查询账号是否存在
+     *
+     * @param account 账号
+     * @return 是否存在 boolean
+     */
+    Boolean isUserAccountExist(String account);
 }
