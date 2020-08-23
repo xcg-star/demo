@@ -2,6 +2,7 @@ package com.chenxt.bootdemo.service;
 
 import com.chenxt.bootdemo.dto.AdminUserDTO;
 import com.chenxt.bootdemo.dto.AdminUserLoginDTO;
+import com.chenxt.bootdemo.dto.AdminUserUpdateDTO;
 import com.chenxt.bootdemo.dto.AdminUserVerifyCodeDTO;
 import com.chenxt.bootdemo.vo.AdminUserVO;
 
@@ -60,4 +61,11 @@ public interface IAdminPermissionService {
      * @return 是否存在 boolean
      */
     Boolean isUserAccountExist(String account);
+
+    /**
+     * 更新用户信息
+     *
+     * @param adminUserUpdateDTO 用户信息
+     */
+    void updateUser(AdminUserUpdateDTO adminUserUpdateDTO);
 }

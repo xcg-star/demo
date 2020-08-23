@@ -2,6 +2,7 @@ package com.chenxt.bootdemo.service.impl;
 
 import com.chenxt.bootdemo.dto.AdminUserDTO;
 import com.chenxt.bootdemo.dto.AdminUserLoginDTO;
+import com.chenxt.bootdemo.dto.AdminUserUpdateDTO;
 import com.chenxt.bootdemo.dto.AdminUserVerifyCodeDTO;
 import com.chenxt.bootdemo.service.IAdminPermissionService;
 import com.chenxt.bootdemo.vo.AdminUserVO;
@@ -43,5 +44,10 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
     @Override
     public Boolean isUserAccountExist(String account) {
         return null;
+    }
+
+    @Override
+    public void updateUser(AdminUserUpdateDTO adminUserUpdateDTO) {
+        
     }
 }
