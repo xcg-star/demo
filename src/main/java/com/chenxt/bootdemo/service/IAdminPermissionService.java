@@ -1,9 +1,7 @@
 package com.chenxt.bootdemo.service;
 
-import com.chenxt.bootdemo.dto.AdminUserDTO;
-import com.chenxt.bootdemo.dto.AdminUserLoginDTO;
-import com.chenxt.bootdemo.dto.AdminUserUpdateDTO;
-import com.chenxt.bootdemo.dto.AdminUserVerifyCodeDTO;
+import com.chenxt.bootdemo.base.security.Token;
+import com.chenxt.bootdemo.dto.*;
 import com.chenxt.bootdemo.vo.AdminUserVO;
 
 /**
@@ -68,4 +66,12 @@ public interface IAdminPermissionService {
      * @param adminUserUpdateDTO 用户信息
      */
     void updateUser(AdminUserUpdateDTO adminUserUpdateDTO);
+
+    /**
+     * 更新用户密码
+     *
+     * @param adminPasswordUpdateDTO 密码信息
+     * @param token                  用户信息
+     */
+    void updatePassword(AdminPasswordUpdateDTO adminPasswordUpdateDTO, Token token);
 }

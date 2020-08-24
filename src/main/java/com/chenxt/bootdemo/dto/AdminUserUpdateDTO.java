@@ -10,7 +10,8 @@ import java.io.Serializable;
 /**
  * 后台管理用户更新DTO
  *
- * @date 2020/05/26
+ * @author chenxt
+ * @date 2020/08/23
  */
 @Data
 @ApiModel(value = "后台管理用户更新DTO")
