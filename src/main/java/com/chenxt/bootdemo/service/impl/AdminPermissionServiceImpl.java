@@ -53,4 +53,9 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
     public void updatePassword(AdminPasswordUpdateDTO adminPasswordUpdateDTO, Token token) {
 
     }
+
+    @Override
+    public void deleteUser(Long id) {
+
+    }
 }

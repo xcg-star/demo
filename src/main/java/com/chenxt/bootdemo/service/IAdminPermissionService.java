@@ -74,4 +74,11 @@ public interface IAdminPermissionService {
      * @param token                  用户信息
      */
     void updatePassword(AdminPasswordUpdateDTO adminPasswordUpdateDTO, Token token);
+
+    /**
+     * 删除用户
+     *
+     * @param id 用户id
+     */
+    void deleteUser(Long id);
 }
