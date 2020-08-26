@@ -1,7 +1,9 @@
 package com.chenxt.bootdemo.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.chenxt.bootdemo.base.security.Token;
 import com.chenxt.bootdemo.dto.*;
+import com.chenxt.bootdemo.vo.AdminUserListVO;
 import com.chenxt.bootdemo.vo.AdminUserVO;
 
 /**
@@ -81,4 +83,12 @@ public interface IAdminPermissionService {
      * @param id 用户id
      */
     void deleteUser(Long id);
+
+    /**
+     * 获取用户列表
+     *
+     * @param adminUserListDTO 条件
+     * @return 用户列表 user list
+     */
+    IPage<AdminUserListVO> getUserList(AdminUserListDTO adminUserListDTO);
 }

@@ -1,8 +1,10 @@
 package com.chenxt.bootdemo.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.chenxt.bootdemo.base.security.Token;
 import com.chenxt.bootdemo.dto.*;
 import com.chenxt.bootdemo.service.IAdminPermissionService;
+import com.chenxt.bootdemo.vo.AdminUserListVO;
 import com.chenxt.bootdemo.vo.AdminUserVO;
 import org.springframework.stereotype.Service;
 
@@ -57,5 +59,10 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
     @Override
     public void deleteUser(Long id) {
 
+    }
+
+    @Override
+    public IPage<AdminUserListVO> getUserList(AdminUserListDTO adminUserListDTO) {
+        return null;
     }
 }
