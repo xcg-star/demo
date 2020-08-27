@@ -91,4 +91,12 @@ public interface IAdminPermissionService {
      * @return 用户列表 user list
      */
     IPage<AdminUserListVO> getUserList(AdminUserListDTO adminUserListDTO);
+
+    /**
+     * 添加菜单
+     *
+     * @param adminMenuDTO 菜单
+     * @return 菜单id long
+     */
+    Long addMenu(AdminMenuDTO adminMenuDTO);
 }

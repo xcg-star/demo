@@ -65,4 +65,9 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
     public IPage<AdminUserListVO> getUserList(AdminUserListDTO adminUserListDTO) {
         return null;
     }
+
+    @Override
+    public Long addMenu(AdminMenuDTO adminMenuDTO) {
+        return null;
+    }
 }
