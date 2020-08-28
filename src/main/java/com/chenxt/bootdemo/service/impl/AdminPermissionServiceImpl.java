@@ -70,4 +70,9 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
     public Long addMenu(AdminMenuDTO adminMenuDTO) {
         return null;
     }
+
+    @Override
+    public void updateMenu(AdminMenuUpdateDTO adminMenuUpdateDTO) {
+
+    }
 }

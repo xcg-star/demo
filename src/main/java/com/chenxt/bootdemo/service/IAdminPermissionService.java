@@ -99,4 +99,11 @@ public interface IAdminPermissionService {
      * @return 菜单id long
      */
     Long addMenu(AdminMenuDTO adminMenuDTO);
+
+    /**
+     * 更新菜单
+     *
+     * @param adminMenuUpdateDTO 菜单
+     */
+    void updateMenu(AdminMenuUpdateDTO adminMenuUpdateDTO);
 }
