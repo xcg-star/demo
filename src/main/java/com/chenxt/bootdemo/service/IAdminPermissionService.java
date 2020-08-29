@@ -106,4 +106,11 @@ public interface IAdminPermissionService {
      * @param adminMenuUpdateDTO 菜单
      */
     void updateMenu(AdminMenuUpdateDTO adminMenuUpdateDTO);
+
+    /**
+     * 删除菜单
+     *
+     * @param id 菜单id
+     */
+    void deleteMenu(Long id);
 }

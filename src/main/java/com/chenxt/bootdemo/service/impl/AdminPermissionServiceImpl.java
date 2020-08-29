@@ -75,4 +75,9 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
     public void updateMenu(AdminMenuUpdateDTO adminMenuUpdateDTO) {
 
     }
+
+    @Override
+    public void deleteMenu(Long id) {
+
+    }
 }
