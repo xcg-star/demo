@@ -4,9 +4,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.chenxt.bootdemo.base.security.Token;
 import com.chenxt.bootdemo.dto.*;
 import com.chenxt.bootdemo.service.IAdminPermissionService;
+import com.chenxt.bootdemo.vo.AdminMenuVO;
 import com.chenxt.bootdemo.vo.AdminUserListVO;
 import com.chenxt.bootdemo.vo.AdminUserVO;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 后台管理权限service接口
@@ -79,5 +82,10 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
     @Override
     public void deleteMenu(Long id) {
 
+    }
+
+    @Override
+    public List<AdminMenuVO> getMenuList() {
+        return null;
     }
 }

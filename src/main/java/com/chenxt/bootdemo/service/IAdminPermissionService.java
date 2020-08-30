@@ -3,8 +3,11 @@ package com.chenxt.bootdemo.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.chenxt.bootdemo.base.security.Token;
 import com.chenxt.bootdemo.dto.*;
+import com.chenxt.bootdemo.vo.AdminMenuVO;
 import com.chenxt.bootdemo.vo.AdminUserListVO;
 import com.chenxt.bootdemo.vo.AdminUserVO;
+
+import java.util.List;
 
 /**
  * 后台管理权限service接口
@@ -113,4 +116,11 @@ public interface IAdminPermissionService {
      * @param id 菜单id
      */
     void deleteMenu(Long id);
+
+    /**
+     * 获取菜单列表
+     *
+     * @return 菜单列表 menu list
+     */
+    List<AdminMenuVO> getMenuList();
 }
