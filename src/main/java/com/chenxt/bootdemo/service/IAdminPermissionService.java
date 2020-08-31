@@ -123,4 +123,12 @@ public interface IAdminPermissionService {
      * @return 菜单列表 menu list
      */
     List<AdminMenuVO> getMenuList();
+
+    /**
+     * 添加用户组
+     *
+     * @param adminGroupDTO 用户组
+     * @return 用户组id long
+     */
+    Long addGroup(AdminGroupDTO adminGroupDTO);
 }

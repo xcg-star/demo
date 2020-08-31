@@ -88,4 +88,9 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
     public List<AdminMenuVO> getMenuList() {
         return null;
     }
+
+    @Override
+    public Long addGroup(AdminGroupDTO adminGroupDTO) {
+        return null;
+    }
 }
