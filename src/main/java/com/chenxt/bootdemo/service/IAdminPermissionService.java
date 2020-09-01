@@ -131,4 +131,11 @@ public interface IAdminPermissionService {
      * @return 用户组id long
      */
     Long addGroup(AdminGroupDTO adminGroupDTO);
+
+    /**
+     * 更新用户组
+     *
+     * @param adminGroupUpdateDTO 用户组
+     */
+    void updateGroup(AdminGroupUpdateDTO adminGroupUpdateDTO);
 }

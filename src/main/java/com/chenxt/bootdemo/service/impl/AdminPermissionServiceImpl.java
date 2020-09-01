@@ -93,4 +93,9 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
     public Long addGroup(AdminGroupDTO adminGroupDTO) {
         return null;
     }
+
+    @Override
+    public void updateGroup(AdminGroupUpdateDTO adminGroupUpdateDTO) {
+
+    }
 }
