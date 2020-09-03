@@ -55,6 +55,24 @@ spring:
     rest:
       uris:
         - ${dev_host}:9200
+  # kafka
+  kafka:
+    bootstrap-servers: ${dev_host}:9092
+    producer:
+      retries: 0
+      batch-size: 16384
+      buffer-memory: 33554432
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        linger.ms: 1
+    consumer:
+      enable-auto-commit: false
+      auto-commit-interval: 100ms
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      properties:
+        session.timeout.ms: 15000
 
   application:
     name: boot-demo
@@ -79,7 +97,7 @@ mybatis-plus:
 
 logging:
   level:
-    root: INFO
+    root: WARN
     org.springframework.web.servlet.mvc: WARN
     org.springframework.boot.actuate: WARN
   pattern:
@@ -106,3 +124,11 @@ canal:
     ip: ${dev_host}
     port: 11111
     zkServers: localhost
+
+#kafka:
+#  topic:
+#    group-id: topicGroupId
+#    topic-name:
+#      - topic1
+#      - topic2
+#      - topic3
