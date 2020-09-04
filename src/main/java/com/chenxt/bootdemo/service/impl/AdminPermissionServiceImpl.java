@@ -1,12 +1,18 @@
 package com.chenxt.bootdemo.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.chenxt.bootdemo.base.expection.enumeration.BusinessExceptionCodeEnum;
 import com.chenxt.bootdemo.base.security.Token;
+import com.chenxt.bootdemo.base.util.Md5Utils;
+import com.chenxt.bootdemo.base.util.ValidateUtils;
 import com.chenxt.bootdemo.dto.*;
+import com.chenxt.bootdemo.entity.AdminUser;
+import com.chenxt.bootdemo.mapper.AdminUserMapper;
 import com.chenxt.bootdemo.service.IAdminPermissionService;
 import com.chenxt.bootdemo.vo.*;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -17,9 +23,19 @@ import java.util.List;
  */
 @Service
 public class AdminPermissionServiceImpl implements IAdminPermissionService {
+    @Resource
+    private AdminUserMapper adminUserMapper;
+
     @Override
     public Boolean adminLogin(AdminUserLoginDTO adminUserLoginDTO) {
-        return null;
+        String account = adminUserLoginDTO.getAccount();
+        String password = adminUserLoginDTO.getPassword();
+        BusinessExceptionCodeEnum.INVALID_PARAMETER.assertIsFalse(ValidateUtils.isOneEmpty(account, password));
+        AdminUser adminUser = adminUserMapper.selectByAccount(account);
+        BusinessExceptionCodeEnum.ADMIN_USER_ACCOUNT_NOT_EXIST.assertNotNull(adminUser);
+        //密码错误
+        BusinessExceptionCodeEnum.ADMIN_USER_PASSWORD_WRONG.assertIsTrue(Md5Utils.verifyHex(adminUser.getPassword(), password));
+        return true;
     }
 
     @Override

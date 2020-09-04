@@ -113,6 +113,106 @@ public enum BusinessExceptionCodeEnum implements BusinessExceptionAssert {
      */
     UN_FOLLOW_SELF_NOT_ALLOW(-1112, "不允许自己取关自己"),
 
+    /**
+     * 后台管理账号不存在
+     */
+    ADMIN_USER_ACCOUNT_NOT_EXIST(-1601, "账号不存在!"),
+
+    /**
+     * 后台管理密码错误
+     */
+    ADMIN_USER_PASSWORD_WRONG(-1602, "密码错误!"),
+
+    /**
+     * 后台管理验证码错误
+     */
+    ADMIN_USER_VERIFYCODE_WRONG(-1603, "验证码错误!"),
+
+    /**
+     * 后台管理账号已存在
+     */
+    ADMIN_USER_ACCOUNT_EXIST(-1604, "账号已存在!"),
+
+    /**
+     * 后台管理用户名已存在
+     */
+    ADMIN_USER_NAME_EXIST(-1605, "用户名已存在!"),
+
+    /**
+     * 后台管理密码不合法
+     */
+    ADMIN_USER_PASSWORD_INVALID(-1606, "请输入6-20个英文或数字的密码!"),
+
+    /**
+     * 后台管理用户不存在
+     */
+    ADMIN_USER_NOT_EXIST(-1607, "该用户不存在"),
+
+    /**
+     * 后台管理验证码错误
+     */
+    ADMIN_VERIFYCODE_WRONG(-1608, "验证码错误！"),
+
+    /**
+     * 后台管理父级菜单不存在
+     */
+    ADMIN_PARENT_MENU_NOT_EXIST(-1609, "父级菜单不存在！"),
+
+    /**
+     * 后台管理菜单不存在
+     */
+    ADMIN_MENU_NOT_EXIST(-1610, "菜单不存在！"),
+
+    /**
+     * 后台管理菜单重名
+     */
+    ADMIN_MENU_NAME_EXIST(-1611, "同级菜单名称已存在！"),
+
+    /**
+     * 后台管理菜单存在子菜单
+     */
+    ADMIN_MENU_HAS_CHILDREN(-1612, "删除前请确认该菜单下无子级菜单！"),
+
+    /**
+     * 后台管理用户组已存在
+     */
+    ADMIN_GROUP_EXIST(-1613, "该用户组已存在！"),
+
+    /**
+     * 后台管理用户组还存在用户
+     */
+    ADMIN_GROUP_HAS_USER(-1614, "删除前请确认该组下无用户！"),
+
+    /**
+     * 后台管理用户组id不存在
+     */
+    ADMIN_GROUP_ID_NOT_EXIST(-1615, "id为{0}的用户组不存在！"),
+
+    /**
+     * 后台管理用户id不存在
+     */
+    ADMIN_USER_ID_NOT_EXIST(-1616, "id为{0}的用户不存在！"),
+
+    /**
+     * 后台管理权限id不存在
+     */
+    ADMIN_PERMISSION_ID_NOT_EXIST(-1617, "id为{0}的权限不存在！"),
+
+    /**
+     * 后台管理菜单id不存在
+     */
+    ADMIN_MENU_ID_NOT_EXIST(-1618, "id为{0}的菜单不存在！"),
+
+    /**
+     * 后台管理用户类型不合法
+     */
+    ADMIN_USER_TYPE_INVALID(-1619, "用户类型不合法！"),
+
+    /**
+     * 后台管理无权限操作
+     */
+    ADMIN_PERMISSION_DENIED(-1620, "无权限操作！"),
+
     ;
 
     private int code;

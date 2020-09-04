@@ -8,6 +8,7 @@ import com.chenxt.bootdemo.base.security.Token;
 import com.chenxt.bootdemo.base.security.TokenParam;
 import com.chenxt.bootdemo.dto.UserDTO;
 import com.chenxt.bootdemo.dto.UserLoginDTO;
+import com.chenxt.bootdemo.mq.kafka.KafkaService;
 import com.chenxt.bootdemo.mq.rabbit.sender.RabbitMqSender;
 import com.chenxt.bootdemo.service.IUserService;
 import com.chenxt.bootdemo.vo.UserSearchResultVO;
@@ -68,6 +69,15 @@ public class UserController {
                                            @RequestParam("nickName") String nickName,
                                            @TokenParam Token token) {
         return userService.searchByNickName(nickName, page, size, token);
+    }
+
+    @Resource
+    private KafkaService kafkaService;
+
+    @GetMapping("/kafka/test")
+    public void test(@RequestParam String topicName,
+                     @RequestParam String message) {
+        kafkaService.sendMessage(topicName, message);
     }
 }
 
