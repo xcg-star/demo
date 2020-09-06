@@ -10,10 +10,15 @@ import com.chenxt.bootdemo.entity.AdminUser;
 import com.chenxt.bootdemo.mapper.AdminUserMapper;
 import com.chenxt.bootdemo.service.IAdminPermissionService;
 import com.chenxt.bootdemo.vo.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toMap;
 
 /**
  * 后台管理权限service接口
@@ -40,7 +45,21 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public AdminUserVO authorize(AdminUserVerifyCodeDTO adminUserVerifyCodeDTO) {
-        return null;
+        String account = adminUserVerifyCodeDTO.getAccount();
+        String verifyCode = adminUserVerifyCodeDTO.getVerifyCode();
+        AdminUser adminUser = adminUserMapper.selectByAccount(account);
+        //账号不存在
+        BusinessExceptionCodeEnum.ADMIN_USER_ACCOUNT_NOT_EXIST.assertNotNull(adminUser);
+        long code = Long.parseLong(verifyCode);
+//        BusinessExceptionCodeEnum.ADMIN_USER_VERIFYCODE_WRONG.assertIsTrue(GoogleAuthenticatorUtils.check_code(adminUser.getSecret(), code, System.currentTimeMillis()));
+        AdminUserVO adminUserVO = new AdminUserVO();
+        BeanUtils.copyProperties(adminUser, adminUserVO);
+        //TODO
+//        adminUserVO.setCdnUrl(cdnUrl);
+//        adminUserVO.setCdnUploadUrl(cdnUploadUrl);
+        //设置菜单权限列表
+//        adminUserVO.setPermissionList(getPermissionForControlList(adminUser.getId(), adminUser.getType(), adminUser.getIsAdminEnable()));
+        return adminUserVO;
     }
 
     @Override
