@@ -3,6 +3,7 @@ package com.chenxt.bootdemo.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.chenxt.bootdemo.base.security.Token;
 import com.chenxt.bootdemo.dto.*;
+import com.chenxt.bootdemo.entity.AdminUser;
 import com.chenxt.bootdemo.vo.*;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public interface IAdminPermissionService {
      * @param userId 用户id
      * @return the admin user
      */
-    void resetSecret(Long userId);
+    AdminUser resetSecret(Long userId);
 
     /**
      * 添加用户

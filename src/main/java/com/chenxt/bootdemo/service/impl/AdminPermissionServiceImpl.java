@@ -3,6 +3,7 @@ package com.chenxt.bootdemo.service.impl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.chenxt.bootdemo.base.expection.enumeration.BusinessExceptionCodeEnum;
 import com.chenxt.bootdemo.base.security.Token;
+import com.chenxt.bootdemo.base.third.auth2.GoogleAuthenticatorUtils;
 import com.chenxt.bootdemo.base.util.Md5Utils;
 import com.chenxt.bootdemo.base.util.ValidateUtils;
 import com.chenxt.bootdemo.dto.*;
@@ -15,10 +16,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toMap;
 
 /**
  * 后台管理权限service接口
@@ -30,6 +27,8 @@ import static java.util.stream.Collectors.toMap;
 public class AdminPermissionServiceImpl implements IAdminPermissionService {
     @Resource
     private AdminUserMapper adminUserMapper;
+
+    private static final String SECRET_QR_CODE_ISSUER = "http://www.chenxt.com";
 
     @Override
     public Boolean adminLogin(AdminUserLoginDTO adminUserLoginDTO) {
@@ -63,8 +62,13 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
     }
 
     @Override
-    public void resetSecret(Long userId) {
-
+    public AdminUser resetSecret(Long userId) {
+        AdminUser adminUser = new AdminUser();
+        adminUser.setId(userId);
+        adminUser.setSecret(GoogleAuthenticatorUtils.getRandomSecretKey());
+        adminUser.setSecretQrCode(GoogleAuthenticatorUtils.getGoogleAuthenticatorBarCode(adminUser.getSecret(), adminUser.getAccount(), SECRET_QR_CODE_ISSUER));
+        adminUserMapper.updateById(adminUser);
+        return adminUser;
     }
 
     @Override
