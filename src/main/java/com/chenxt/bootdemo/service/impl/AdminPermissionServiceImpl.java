@@ -73,7 +73,20 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public Boolean addUser(AdminUserDTO adminUserDTO) {
-        return null;
+        BusinessExceptionCodeEnum.INVALID_PARAMETER.assertIsFalse(ValidateUtils.isOneEmpty(adminUserDTO.getName(), adminUserDTO.getAccount(), adminUserDTO.getPassword()));
+        //账号已存在
+        BusinessExceptionCodeEnum.ADMIN_USER_ACCOUNT_EXIST.assertIsNull(adminUserMapper.selectByAccount(adminUserDTO.getAccount()));
+        //用户名已存在
+        BusinessExceptionCodeEnum.ADMIN_USER_NAME_EXIST.assertIsNull(adminUserMapper.selectByName(adminUserDTO.getName()));
+        AdminUser adminUser = new AdminUser();
+        BeanUtils.copyProperties(adminUserDTO, adminUser);
+        //密码使用Md5加密
+        adminUser.setPassword(Md5Utils.encodeHex(adminUser.getPassword()));
+        //设置密钥和密钥二维码
+        adminUser.setSecret(GoogleAuthenticatorUtils.getRandomSecretKey());
+        adminUser.setSecretQrCode(GoogleAuthenticatorUtils.getGoogleAuthenticatorBarCode(adminUser.getSecret(), adminUser.getAccount(), SECRET_QR_CODE_ISSUER));
+        adminUserMapper.insert(adminUser);
+        return true;
     }
 
     @Override
