@@ -91,7 +91,7 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public Boolean isUserNameExist(String name) {
-        return null;
+        return adminUserMapper.selectByName(name) != null;
     }
 
     @Override
