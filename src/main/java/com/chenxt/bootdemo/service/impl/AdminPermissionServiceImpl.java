@@ -101,7 +101,15 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public void updateUser(AdminUserUpdateDTO adminUserUpdateDTO) {
-
+        AdminUser adminUser = adminUserMapper.selectByName(adminUserUpdateDTO.getName());
+        //用户名已存在
+        BusinessExceptionCodeEnum.ADMIN_USER_NAME_EXIST.assertIsTrue(adminUser == null || adminUser.getId().equals(adminUserUpdateDTO.getId()));
+        adminUser = new AdminUser();
+        BeanUtils.copyProperties(adminUserUpdateDTO, adminUser);
+        if (adminUser.getPassword() != null) {
+            adminUser.setPassword(Md5Utils.encodeHex(adminUser.getPassword()));
+        }
+        adminUserMapper.updateById(adminUser);
     }
 
     @Override
