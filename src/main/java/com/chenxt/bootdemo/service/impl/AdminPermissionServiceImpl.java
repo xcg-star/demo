@@ -114,7 +114,16 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public void updatePassword(AdminPasswordUpdateDTO adminPasswordUpdateDTO, Token token) {
-
+        Long currentUserId = token.getCurrentUserId();
+        AdminUser adminUser = adminUserMapper.selectById(currentUserId);
+        //用户不存在
+        BusinessExceptionCodeEnum.ADMIN_USER_NOT_EXIST.assertNotNull(adminUser);
+        //密码错误
+        BusinessExceptionCodeEnum.ADMIN_USER_PASSWORD_WRONG.assertIsTrue(Md5Utils.verifyHex(adminUser.getPassword(), adminPasswordUpdateDTO.getOldPassword()));
+        adminUser = new AdminUser();
+        adminUser.setId(currentUserId);
+        adminUser.setPassword(Md5Utils.encodeHex(adminPasswordUpdateDTO.getNewPassword()));
+        adminUserMapper.updateById(adminUser);
     }
 
     @Override
