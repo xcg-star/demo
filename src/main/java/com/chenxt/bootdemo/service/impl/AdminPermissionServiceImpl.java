@@ -8,6 +8,8 @@ import com.chenxt.bootdemo.base.util.Md5Utils;
 import com.chenxt.bootdemo.base.util.ValidateUtils;
 import com.chenxt.bootdemo.dto.*;
 import com.chenxt.bootdemo.entity.AdminUser;
+import com.chenxt.bootdemo.mapper.AdminGroupUserLinkMapper;
+import com.chenxt.bootdemo.mapper.AdminPermissionLinkMapper;
 import com.chenxt.bootdemo.mapper.AdminUserMapper;
 import com.chenxt.bootdemo.service.IAdminPermissionService;
 import com.chenxt.bootdemo.vo.*;
@@ -27,6 +29,10 @@ import java.util.List;
 public class AdminPermissionServiceImpl implements IAdminPermissionService {
     @Resource
     private AdminUserMapper adminUserMapper;
+    @Resource
+    private AdminGroupUserLinkMapper adminGroupUserLinkMapper;
+    @Resource
+    private AdminPermissionLinkMapper adminPermissionLinkMapper;
 
     private static final String SECRET_QR_CODE_ISSUER = "http://www.chenxt.com";
 
@@ -128,7 +134,9 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public void deleteUser(Long id) {
-
+        adminUserMapper.deleteById(id);
+        adminGroupUserLinkMapper.deleteByUserId(id);
+        adminPermissionLinkMapper.deleteByUserId(id);
     }
 
     @Override
