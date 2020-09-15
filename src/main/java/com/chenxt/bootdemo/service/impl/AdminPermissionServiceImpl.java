@@ -1,23 +1,29 @@
 package com.chenxt.bootdemo.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chenxt.bootdemo.base.expection.enumeration.BusinessExceptionCodeEnum;
 import com.chenxt.bootdemo.base.security.Token;
 import com.chenxt.bootdemo.base.third.auth2.GoogleAuthenticatorUtils;
 import com.chenxt.bootdemo.base.util.Md5Utils;
 import com.chenxt.bootdemo.base.util.ValidateUtils;
 import com.chenxt.bootdemo.dto.*;
+import com.chenxt.bootdemo.entity.AdminGroup;
+import com.chenxt.bootdemo.entity.AdminGroupUserLink;
 import com.chenxt.bootdemo.entity.AdminUser;
+import com.chenxt.bootdemo.mapper.AdminGroupMapper;
 import com.chenxt.bootdemo.mapper.AdminGroupUserLinkMapper;
 import com.chenxt.bootdemo.mapper.AdminPermissionLinkMapper;
 import com.chenxt.bootdemo.mapper.AdminUserMapper;
 import com.chenxt.bootdemo.service.IAdminPermissionService;
 import com.chenxt.bootdemo.vo.*;
+import org.apache.commons.beanutils.BeanMap;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 后台管理权限service接口
@@ -33,6 +39,8 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
     private AdminGroupUserLinkMapper adminGroupUserLinkMapper;
     @Resource
     private AdminPermissionLinkMapper adminPermissionLinkMapper;
+    @Resource
+    private AdminGroupMapper adminGroupMapper;
 
     private static final String SECRET_QR_CODE_ISSUER = "http://www.chenxt.com";
 
@@ -141,7 +149,30 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public IPage<AdminUserListVO> getUserList(AdminUserListDTO adminUserListDTO) {
-        return null;
+        //查询全部用户组
+        List<AdminGroup> adminGroupList = adminGroupMapper.selectList(null);
+        //查询全部用户组用户关系
+        List<AdminGroupUserLink> adminGroupUserLinkList = adminGroupUserLinkMapper.selectList(null);
+        //分页条件查询
+        Page<AdminUser> userPage = new Page<>(adminUserListDTO.getPage(), adminUserListDTO.getSize());
+        BeanMap queryParam = new BeanMap(adminUserListDTO);
+        IPage<AdminUser> adminUserIPage = adminUserMapper.selectPageVo(userPage, queryParam);
+        //将Page<AdminUser>转为Page<AdminUserVO>
+        return adminUserIPage.convert(adminUser -> {
+            AdminUserListVO adminUserListVO = new AdminUserListVO();
+            BeanUtils.copyProperties(adminUser, adminUserListVO);
+            List<Long> groupIdList = adminGroupUserLinkList.stream().filter(adminGroupUserLink -> adminGroupUserLink.getAdminUserId().equals(adminUser.getId())).map(AdminGroupUserLink::getAdminGroupId).collect(Collectors.toList());
+            if (!groupIdList.isEmpty()) {
+                List<AdminUserGroupVO> adminUserGroupVOList = adminGroupList.stream().filter(adminGroup -> groupIdList.contains(adminGroup.getId())).map(adminGroup -> {
+                    AdminUserGroupVO adminUserGroupVO = new AdminUserGroupVO();
+                    adminUserGroupVO.setGroupId(adminGroup.getId());
+                    adminUserGroupVO.setGroupName(adminGroup.getName());
+                    return adminUserGroupVO;
+                }).collect(Collectors.toList());
+                adminUserListVO.setGroupList(adminUserGroupVOList);
+            }
+            return adminUserListVO;
+        });
     }
 
     @Override
