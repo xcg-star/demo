@@ -8,13 +8,8 @@ import com.chenxt.bootdemo.base.third.auth2.GoogleAuthenticatorUtils;
 import com.chenxt.bootdemo.base.util.Md5Utils;
 import com.chenxt.bootdemo.base.util.ValidateUtils;
 import com.chenxt.bootdemo.dto.*;
-import com.chenxt.bootdemo.entity.AdminGroup;
-import com.chenxt.bootdemo.entity.AdminGroupUserLink;
-import com.chenxt.bootdemo.entity.AdminUser;
-import com.chenxt.bootdemo.mapper.AdminGroupMapper;
-import com.chenxt.bootdemo.mapper.AdminGroupUserLinkMapper;
-import com.chenxt.bootdemo.mapper.AdminPermissionLinkMapper;
-import com.chenxt.bootdemo.mapper.AdminUserMapper;
+import com.chenxt.bootdemo.entity.*;
+import com.chenxt.bootdemo.mapper.*;
 import com.chenxt.bootdemo.service.IAdminPermissionService;
 import com.chenxt.bootdemo.vo.*;
 import org.apache.commons.beanutils.BeanMap;
@@ -41,6 +36,10 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
     private AdminPermissionLinkMapper adminPermissionLinkMapper;
     @Resource
     private AdminGroupMapper adminGroupMapper;
+    @Resource
+    private AdminMenuMapper adminMenuMapper;
+    @Resource
+    private AdminPermissionMapper adminPermissionMapper;
 
     private static final String SECRET_QR_CODE_ISSUER = "http://www.chenxt.com";
 
@@ -177,7 +176,16 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public Long addMenu(AdminMenuDTO adminMenuDTO) {
-        return null;
+        BusinessExceptionCodeEnum.ADMIN_PARENT_MENU_NOT_EXIST.assertIsTrue(adminMenuDTO.getParentId() == null || adminMenuMapper.selectById(adminMenuDTO.getParentId()) != null);
+        BusinessExceptionCodeEnum.ADMIN_MENU_NAME_EXIST.assertIsNull(adminMenuMapper.selectByNameAndParentId(adminMenuDTO.getName(), adminMenuDTO.getParentId()));
+        AdminMenu adminMenu = new AdminMenu();
+        BeanUtils.copyProperties(adminMenuDTO, adminMenu);
+        adminMenuMapper.insert(adminMenu);
+        //新增菜单对应的权限
+        AdminPermission adminPermission = new AdminPermission();
+        adminPermission.setAdminMenuId(adminMenu.getId());
+        adminPermissionMapper.insert(adminPermission);
+        return adminMenu.getId();
     }
 
     @Override
