@@ -190,7 +190,11 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public void updateMenu(AdminMenuUpdateDTO adminMenuUpdateDTO) {
-
+        AdminMenu adminMenu = adminMenuMapper.selectById(adminMenuUpdateDTO.getId());
+        BusinessExceptionCodeEnum.ADMIN_MENU_NOT_EXIST.assertNotNull(adminMenu);
+        adminMenu = new AdminMenu();
+        BeanUtils.copyProperties(adminMenuUpdateDTO, adminMenu);
+        adminMenuMapper.updateById(adminMenu);
     }
 
     @Override
