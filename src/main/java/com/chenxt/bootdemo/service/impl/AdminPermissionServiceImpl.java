@@ -199,7 +199,14 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public void deleteMenu(Long id) {
-
+        BusinessExceptionCodeEnum.ADMIN_MENU_NOT_EXIST.assertNotNull(adminMenuMapper.selectById(id));
+        BusinessExceptionCodeEnum.ADMIN_MENU_HAS_CHILDREN.assertIsFalse(adminMenuMapper.hasChildren(id));
+        adminMenuMapper.deleteById(id);
+        //删除菜单对应的权限
+        AdminPermission adminPermission = adminPermissionMapper.selectByMenuId(id);
+        adminPermissionMapper.deleteById(adminPermission.getId());
+        //删除权限对应的权限关系
+        adminPermissionLinkMapper.deleteByPermissionId(adminPermission.getId());
     }
 
     @Override
