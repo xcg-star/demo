@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chenxt.bootdemo.base.expection.enumeration.BusinessExceptionCodeEnum;
 import com.chenxt.bootdemo.base.security.Token;
 import com.chenxt.bootdemo.base.third.auth2.GoogleAuthenticatorUtils;
+import com.chenxt.bootdemo.base.util.ListUtils;
 import com.chenxt.bootdemo.base.util.Md5Utils;
 import com.chenxt.bootdemo.base.util.ValidateUtils;
 import com.chenxt.bootdemo.dto.*;
@@ -17,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -211,7 +213,7 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public List<AdminMenuVO> getMenuList() {
-        return null;
+        return ListUtils.copyListBeanProperties(getAdminMenuListOrder(false), AdminMenuVO.class);
     }
 
     @Override
@@ -367,5 +369,16 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
     @Override
     public AdminUserVO getAdminUser(Long adminUserId) {
         return null;
+    }
+
+    private List<AdminMenu> getAdminMenuListOrder(Boolean mustEnable) {
+        List<AdminMenu> parentList = adminMenuMapper.selectParentListOrder(mustEnable);
+        List<AdminMenu> childrenList = adminMenuMapper.selectChildrenListOrder(mustEnable);
+        List<AdminMenu> adminMenuList = new ArrayList<>();
+        parentList.forEach(parent -> {
+            adminMenuList.add(parent);
+            adminMenuList.addAll(childrenList.stream().filter(child -> parent.getId().equals(child.getParentId())).collect(Collectors.toList()));
+        });
+        return adminMenuList;
     }
 }
