@@ -218,7 +218,11 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public Long addGroup(AdminGroupDTO adminGroupDTO) {
-        return null;
+        BusinessExceptionCodeEnum.ADMIN_GROUP_EXIST.assertIsNull(adminGroupMapper.selectByName(adminGroupDTO.getName()));
+        AdminGroup adminGroup = new AdminGroup();
+        BeanUtils.copyProperties(adminGroupDTO, adminGroup);
+        adminGroupMapper.insert(adminGroup);
+        return adminGroup.getId();
     }
 
     @Override
