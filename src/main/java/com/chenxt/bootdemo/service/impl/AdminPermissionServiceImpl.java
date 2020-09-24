@@ -227,7 +227,11 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public void updateGroup(AdminGroupUpdateDTO adminGroupUpdateDTO) {
-
+        AdminGroup adminGroup = adminGroupMapper.selectByName(adminGroupUpdateDTO.getName());
+        BusinessExceptionCodeEnum.ADMIN_GROUP_EXIST.assertIsTrue(adminGroup == null || adminGroup.getId().equals(adminGroupUpdateDTO.getId()));
+        adminGroup = new AdminGroup();
+        BeanUtils.copyProperties(adminGroupUpdateDTO, adminGroup);
+        adminGroupMapper.updateById(adminGroup);
     }
 
     @Override
