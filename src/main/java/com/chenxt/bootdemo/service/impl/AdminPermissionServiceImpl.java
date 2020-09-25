@@ -16,6 +16,7 @@ import com.chenxt.bootdemo.vo.*;
 import org.apache.commons.beanutils.BeanMap;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -236,7 +237,9 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public void deleteGroup(Long id) {
-
+        BusinessExceptionCodeEnum.ADMIN_GROUP_HAS_USER.assertIsTrue(CollectionUtils.isEmpty(adminGroupUserLinkMapper.selectByGroupId(id)));
+        adminGroupMapper.deleteById(id);
+        adminPermissionLinkMapper.deleteByGroupId(id);
     }
 
     @Override
