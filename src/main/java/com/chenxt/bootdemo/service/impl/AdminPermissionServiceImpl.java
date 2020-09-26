@@ -244,7 +244,17 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public IPage<AdminGroupListVO> getGroupList(AdminGroupListDTO adminGroupListDTO) {
-        return null;
+        //分页条件查询
+        Page<AdminGroup> adminGroupPage = new Page<>(adminGroupListDTO.getPage(), adminGroupListDTO.getSize());
+        BeanMap queryParam = new BeanMap(adminGroupListDTO);
+        IPage<AdminGroup> adminGroupIPage = adminGroupMapper.selectPageVo(adminGroupPage, queryParam);
+        //将Page<AdminGroup>转为Page<AdminGroupListVO>
+        return adminGroupIPage.convert(adminGroup -> {
+            AdminGroupListVO adminGroupListVO = new AdminGroupListVO();
+            BeanUtils.copyProperties(adminGroup, adminGroupListVO);
+            adminGroupListVO.setUserCount(adminGroupUserLinkMapper.countByGroupId(adminGroup.getId()));
+            return adminGroupListVO;
+        });
     }
 
     @Override
