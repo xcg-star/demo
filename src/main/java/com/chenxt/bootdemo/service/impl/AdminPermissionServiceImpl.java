@@ -1,5 +1,6 @@
 package com.chenxt.bootdemo.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chenxt.bootdemo.base.expection.enumeration.BusinessExceptionCodeEnum;
@@ -273,7 +274,9 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public void deleteUserGroup(Long userId, Long groupId) {
-
+        adminGroupUserLinkMapper.delete(new LambdaQueryWrapper<AdminGroupUserLink>()
+                .eq(AdminGroupUserLink::getAdminUserId, userId)
+                .eq(AdminGroupUserLink::getAdminGroupId, groupId));
     }
 
     @Override
