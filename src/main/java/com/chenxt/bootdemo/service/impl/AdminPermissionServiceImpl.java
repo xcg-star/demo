@@ -281,7 +281,21 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public IPage<AdminUserGroupVO> getUserGroupList(Long userId, Integer page, Integer size) {
-        return null;
+        //查询全部用户组
+        List<AdminGroup> adminGroupList = adminGroupMapper.selectList(null);
+
+        Page<AdminGroupUserLink> adminGroupUserLinkPage = new Page<>(page, size);
+        IPage<AdminGroupUserLink> adminGroupUserLinkIPage = adminGroupUserLinkMapper.selectPageVoByUserId(adminGroupUserLinkPage, userId);
+        //将Page<AdminGroupUserLink>转为Page<AdminUserGroupVO>
+        return adminGroupUserLinkIPage.convert(adminGroupUserLink -> {
+            AdminUserGroupVO adminUserGroupVO = new AdminUserGroupVO();
+            adminUserGroupVO.setGroupId(adminGroupUserLink.getAdminGroupId());
+            adminGroupList.stream().filter(adminGroup -> adminGroup.getId().equals(adminGroupUserLink.getAdminGroupId())).findFirst().ifPresent(adminGroup -> adminUserGroupVO.setGroupName(adminGroup.getName()));
+            BusinessExceptionCodeEnum.ADMIN_GROUP_ID_NOT_EXIST.assertNotNull(adminUserGroupVO.getGroupName());
+
+            adminUserGroupVO.setJoinTime(adminGroupUserLink.getCreatedAt());
+            return adminUserGroupVO;
+        });
     }
 
     @Override
