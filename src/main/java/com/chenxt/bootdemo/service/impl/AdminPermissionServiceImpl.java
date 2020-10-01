@@ -316,7 +316,14 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public void updateGroupUser(Long groupId, AdminGroupUserDTO adminGroupUserDTO) {
+        //查询全部用户
+        List<AdminUser> adminUserList = adminUserMapper.selectList(null);
 
+        adminGroupUserDTO.getUserIdList().forEach(userId -> BusinessExceptionCodeEnum.ADMIN_USER_ID_NOT_EXIST.assertIsFalse(adminUserList.stream().noneMatch(adminUser -> adminUser.getId().equals(userId))));
+        adminGroupUserLinkMapper.deleteByGroupIdAndNotInUserIdList(groupId, adminGroupUserDTO.getUserIdList());
+        if (!CollectionUtils.isEmpty(adminGroupUserDTO.getUserIdList())) {
+            adminGroupUserLinkMapper.insertByGroupIdAndUserIdListOnDuplicateDoNoting(groupId, adminGroupUserDTO.getUserIdList());
+        }
     }
 
     @Override
