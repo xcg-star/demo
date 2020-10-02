@@ -328,7 +328,9 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public void deleteGroupUser(Long groupId, Long userId) {
-
+        adminGroupUserLinkMapper.delete(new LambdaQueryWrapper<AdminGroupUserLink>()
+                .eq(AdminGroupUserLink::getAdminUserId, userId)
+                .eq(AdminGroupUserLink::getAdminGroupId, groupId));
     }
 
     @Override
