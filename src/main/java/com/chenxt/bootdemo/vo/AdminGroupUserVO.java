@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 后台管理用户组的用户VO
@@ -25,5 +25,5 @@ public class AdminGroupUserVO implements Serializable {
     private String userName;
 
     @ApiModelProperty(value = "加入时间")
-    private Date joinTime;
+    private LocalDateTime joinTime;
 }
