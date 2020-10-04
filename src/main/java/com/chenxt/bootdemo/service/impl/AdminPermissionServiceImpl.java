@@ -22,7 +22,10 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toMap;
 
 /**
  * 后台管理权限service接口
@@ -354,7 +357,38 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public IPage<AdminUserPermissionVO> getUserPermissionList(Long userId, Integer page, Integer size) {
-        return null;
+        //查询全部菜单
+        List<AdminMenu> adminMenuList = adminMenuMapper.selectList(null);
+        Map<Long, AdminMenu> adminMenuMap = adminMenuList.stream().collect(toMap(AdminMenu::getId, adminMenu -> adminMenu));
+        //查询全部权限
+        List<AdminPermission> adminPermissionList = adminPermissionMapper.selectList(null);
+        Map<Long, AdminPermission> adminPermissionMap = adminPermissionList.stream().collect(toMap(AdminPermission::getId, adminPermission -> adminPermission));
+
+        Page<AdminPermissionLink> adminPermissionLinkPage = new Page<>(page, size);
+        IPage<AdminPermissionLink> adminPermissionLinkIPage = adminPermissionLinkMapper.selectPageVoByUserId(adminPermissionLinkPage, userId);
+        //将Page<AdminPermissionLink>转为Page<AdminUserPermissionVO>
+        return adminPermissionLinkIPage.convert(adminPermissionLink -> {
+            AdminUserPermissionVO adminUserPermissionVO = new AdminUserPermissionVO();
+            AdminPermission permission = adminPermissionMap.get(adminPermissionLink.getAdminPermissionId());
+            //权限不存在
+            BusinessExceptionCodeEnum.ADMIN_PERMISSION_ID_NOT_EXIST.assertNotNull(permission);
+            AdminMenu menu = adminMenuMap.get(permission.getAdminMenuId());
+            //菜单不存在
+            BusinessExceptionCodeEnum.ADMIN_MENU_ID_NOT_EXIST.assertNotNull(permission);
+            AdminMenu parentMenu = adminMenuMap.get(menu.getParentId());
+
+            adminUserPermissionVO.setPermissionId(permission.getId());
+            adminUserPermissionVO.setMenuId(menu.getId());
+            adminUserPermissionVO.setMenuName(menu.getName());
+            if (parentMenu != null) {
+                //是子级
+                adminUserPermissionVO.setParentMenuId(parentMenu.getId());
+                adminUserPermissionVO.setParentMenuName(parentMenu.getName());
+            }
+            adminUserPermissionVO.setIsButtonEnable(adminPermissionLink.getIsButtonEnable());
+            adminUserPermissionVO.setAddTime(adminPermissionLink.getCreatedAt());
+            return adminUserPermissionVO;
+        });
     }
 
     @Override
