@@ -393,7 +393,46 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public IPage<AdminUserPermissionExtendVO> getUserPermissionExtendList(Long userId, Integer page, Integer size, Long groupId) {
-        return null;
+        //查询全部菜单
+        List<AdminMenu> adminMenuList = adminMenuMapper.selectList(null);
+        Map<Long, AdminMenu> adminMenuMap = adminMenuList.stream().collect(toMap(AdminMenu::getId, adminMenu -> adminMenu));
+        //查询全部权限
+        List<AdminPermission> adminPermissionList = adminPermissionMapper.selectList(null);
+        Map<Long, AdminPermission> adminPermissionMap = adminPermissionList.stream().collect(toMap(AdminPermission::getId, adminPermission -> adminPermission));
+        //查询全部用户组
+        List<AdminGroup> adminGroupList = adminGroupMapper.selectList(null);
+        Map<Long, AdminGroup> adminGroupMap = adminGroupList.stream().collect(toMap(AdminGroup::getId, adminGroup -> adminGroup));
+
+        Page<AdminPermissionLink> adminPermissionLinkPage = new Page<>(page, size);
+        IPage<AdminPermissionLink> adminPermissionLinkIPage = adminPermissionLinkMapper.selectExtendPageVoByUserId(adminPermissionLinkPage, userId, groupId);
+        //将Page<AdminPermissionLink>转为Page<AdminUserPermissionVO>
+        return adminPermissionLinkIPage.convert(adminPermissionLink -> {
+            AdminUserPermissionExtendVO adminUserPermissionExtendVO = new AdminUserPermissionExtendVO();
+            AdminPermission permission = adminPermissionMap.get(adminPermissionLink.getAdminPermissionId());
+            //权限不存在
+            BusinessExceptionCodeEnum.ADMIN_PERMISSION_ID_NOT_EXIST.assertNotNull(permission);
+            AdminMenu menu = adminMenuMap.get(permission.getAdminMenuId());
+            //菜单不存在
+            BusinessExceptionCodeEnum.ADMIN_MENU_ID_NOT_EXIST.assertNotNull(permission);
+            AdminMenu parentMenu = adminMenuMap.get(menu.getParentId());
+
+            AdminGroup adminGroup = adminGroupMap.get(adminPermissionLink.getAdminGroupId());
+            //用户组不存在
+            BusinessExceptionCodeEnum.ADMIN_GROUP_ID_NOT_EXIST.assertNotNull(adminGroup);
+            adminUserPermissionExtendVO.setGroupId(adminGroup.getId());
+            adminUserPermissionExtendVO.setGroupName(adminGroup.getName());
+            adminUserPermissionExtendVO.setPermissionId(permission.getId());
+            adminUserPermissionExtendVO.setMenuId(menu.getId());
+            adminUserPermissionExtendVO.setMenuName(menu.getName());
+            if (parentMenu != null) {
+                //是子级
+                adminUserPermissionExtendVO.setParentMenuId(parentMenu.getId());
+                adminUserPermissionExtendVO.setParentMenuName(parentMenu.getName());
+            }
+            adminUserPermissionExtendVO.setIsButtonEnable(adminPermissionLink.getIsButtonEnable());
+            adminUserPermissionExtendVO.setAddTime(adminPermissionLink.getCreatedAt());
+            return adminUserPermissionExtendVO;
+        });
     }
 
     @Override

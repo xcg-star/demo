@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 后台管理用户的权限VO
@@ -43,5 +43,5 @@ public class AdminUserPermissionExtendVO implements Serializable {
     private Boolean isButtonEnable;
 
     @ApiModelProperty(value = "授权时间")
-    private Date addTime;
+    private LocalDateTime addTime;
 }
