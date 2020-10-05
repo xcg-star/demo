@@ -437,7 +437,41 @@ public class AdminPermissionServiceImpl implements IAdminPermissionService {
 
     @Override
     public List<AdminUserPermissionAllVO> getUserPermissionAllList(Long userId) {
-        return null;
+
+        //查询全部菜单
+        List<AdminMenu> adminMenuList = adminMenuMapper.selectList(null);
+        Map<Long, AdminMenu> adminMenuMap = adminMenuList.stream().collect(toMap(AdminMenu::getId, adminMenu -> adminMenu));
+        //查询全部权限
+        List<AdminPermission> adminPermissionList = adminPermissionMapper.selectList(null);
+        Map<Long, AdminPermission> adminPermissionMap = adminPermissionList.stream().collect(toMap(AdminPermission::getId, adminPermission -> adminPermission));
+
+        //继承权限id列表
+        List<Long> permissionIdOnlyWithExtendList = adminPermissionLinkMapper.selectPermissionIdListOnlyWithExtendByUserId(userId);
+        List<AdminPermissionLink> permissionLinkWithExtendList = adminPermissionLinkMapper.selectPermissionIdListWithExtendByUserId(userId);
+        //将Page<AdminPermissionLink>转为Page<AdminUserPermissionVO>
+        return permissionLinkWithExtendList.stream().map(adminPermissionLink -> {
+            AdminUserPermissionAllVO adminUserPermissionAllVO = new AdminUserPermissionAllVO();
+            AdminPermission permission = adminPermissionMap.get(adminPermissionLink.getAdminPermissionId());
+            //权限不存在
+            BusinessExceptionCodeEnum.ADMIN_PERMISSION_ID_NOT_EXIST.assertNotNull(permission);
+            AdminMenu menu = adminMenuMap.get(permission.getAdminMenuId());
+            //菜单不存在
+            BusinessExceptionCodeEnum.ADMIN_MENU_ID_NOT_EXIST.assertNotNull(permission);
+            AdminMenu parentMenu = adminMenuMap.get(menu.getParentId());
+
+            adminUserPermissionAllVO.setPermissionId(permission.getId());
+            adminUserPermissionAllVO.setMenuId(menu.getId());
+            adminUserPermissionAllVO.setMenuName(menu.getName());
+            if (parentMenu != null) {
+                //是子级
+                adminUserPermissionAllVO.setParentMenuId(parentMenu.getId());
+                adminUserPermissionAllVO.setParentMenuName(parentMenu.getName());
+            }
+            adminUserPermissionAllVO.setIsButtonEnable(adminPermissionLink.getIsButtonEnable());
+            adminUserPermissionAllVO.setAddTime(adminPermissionLink.getCreatedAt());
+            adminUserPermissionAllVO.setIsExtend(permissionIdOnlyWithExtendList.contains(adminPermissionLink.getAdminPermissionId()));
+            return adminUserPermissionAllVO;
+        }).collect(Collectors.toList());
     }
 
     @Override

@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 后台管理用户的全部权限VO
@@ -38,5 +38,5 @@ public class AdminUserPermissionAllVO {
     private Boolean isButtonEnable;
 
     @ApiModelProperty(value = "授权时间")
-    private Date addTime;
+    private LocalDateTime addTime;
 }
